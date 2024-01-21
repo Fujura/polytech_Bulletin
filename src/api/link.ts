@@ -1,0 +1,1 @@
+export const link = 'https://bulletin-api.onrender.com'

@@ -1,0 +1,87 @@
+.profilePicture {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile__Container {
+  display: flex;
+}
+
+.profile__LeftSide {
+  height: 100vh;
+  width: 200px;
+  background-color: #fff;
+  color: #000;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+
+  transition: transform 0.3s ease;
+  position: fixed;
+  left: 0;
+}
+
+.toggle__Btn {
+  padding: 0;
+  background-color: transparent;
+  color: #000;
+}
+.logout__Container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  
+}
+.logout {
+  width: 64px;
+  height: 48px;
+  
+}
+
+
+
+.burgerContainer {
+  display: none;
+  padding: 5px;
+  width: 50px;
+  height: 50px;
+  border-radius: 0 50% 50% 0;
+  background-color: #fff;
+  flex-direction: column;
+
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.arrow{
+  position: fixed;
+  top: 30px;
+  right: 30px;
+}
+
+@media screen and (max-width: 768px) {
+  .profile__LeftSide {
+    position: fixed;
+    /* left: -200px; */
+    z-index: 2;
+
+  }
+
+  .profile__Container {
+    position: relative;
+  }
+  .burgerContainer {
+    display: flex;
+    margin-top: 100px;
+    position: fixed;
+    z-index: 2;
+
+  }
+  
+}
+
+

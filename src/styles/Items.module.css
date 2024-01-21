@@ -1,0 +1,31 @@
+.items__Container {
+  display: grid;
+  grid-template-columns: 400px 400px 400px;
+  gap: 50px;
+  margin: 50px auto;
+  justify-content: center;
+}
+
+.arrow {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+}
+
+@media screen and (max-width: 1324px) {
+  .items__Container {
+    grid-template-columns: 400px 400px;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .items__Container {
+    grid-template-columns: 400px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .items__Container {
+    grid-template-columns: 300px;
+  }
+}

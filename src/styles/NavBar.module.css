@@ -1,0 +1,165 @@
+.navbar {
+  position: fixed;
+  background-color: #fffafa;
+  height: 100svh;
+  border-radius: 0 16px 16px 0;
+  /* padding: 15px 10px; */
+}
+
+.navbar__LinksContainer {
+  position: relative;
+  top: 20svh;
+}
+
+
+.navbar__Link {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profileIcon {
+  width: 32px;
+  height: 32px;
+}
+
+/* logo */
+.logo {
+  width: 50px;
+  height: 50px;
+}
+
+.navbar__ProfileImg {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 50%;
+  border: 1px solid #000;
+}
+
+.logo__Title {
+  font-size: 24px;
+  color: #ff2025;
+}
+
+.logo__Text {
+  /* line-height: ; */
+  color: #000;
+  font-size: 12px;
+  margin-top: -10px;
+}
+.logo__Container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.navbar__Icons {
+  width: 32px;
+  height: 32px;
+}
+
+.links {
+  flex-direction: column;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    bottom: 0;
+    height: auto;
+    width: 100vw;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .navbar__LinksContainer {
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .navbar__Link {
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navbar__LinkText {
+    line-height: 0px;
+    margin: 7.5px 0;
+    font-size: 16px;
+  }
+
+  .logo__Container {
+    display: none;
+   }
+
+}
+
+@media screen and (max-width: 425px) {
+  .navbar__LinkText {
+    font-size: 12px;
+  }
+
+  .navbar__Icons {
+    width: 30px;
+    height: 30px;
+  }
+
+  .navbar__ProfileImg {
+    height: 36px;
+    width: 36px;
+  }
+}
+/* 
+@media screen and (max-width: 768px) {
+  .nav__LinkContainer {
+    display: none;
+  }
+
+  .links{
+    display: none;
+  }
+
+  .nav__SvgContainer{
+    display: none;
+  }
+  
+  .burgerContainer{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .burgerLine1{
+    width: 30px;
+    height: 2px;
+    border-radius: 32px;
+    background-color: #fff;
+  }
+  
+  .burgerLine2{
+    width: 30px;
+    height: 2px;
+    margin: 7.5px 0;
+    border-radius: 32px;
+    background-color: #fff;
+  }
+
+  .burgerLine3{
+    width: 30px;
+    height: 2px;
+    border-radius: 32px;
+
+    background-color: #fff;
+  }
+
+  .links{
+    display: none;
+  }
+} */

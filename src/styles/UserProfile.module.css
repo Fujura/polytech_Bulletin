@@ -1,0 +1,37 @@
+.user__HeaderAvatar{
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user__HeaderUsername{
+    font-size: 48px;
+    color: #fff;
+}
+
+.items__Container{
+    display: grid;
+    gap: 50px;
+    grid-template-columns: 400px 400px 400px;
+    justify-content: center;
+}
+
+@media screen and (max-width: 1324px) {
+    .items__Container {
+      grid-template-columns: 400px 400px;
+    }
+  }
+  
+  @media screen and (max-width: 880px) {
+    .items__Container {
+      grid-template-columns: 400px;
+    }
+  }
+  
+  @media screen and (max-width: 425px) {
+    .items__Container {
+      grid-template-columns: 300px;
+    }
+  }
+  
