@@ -33,9 +33,7 @@
 .logout__Container {
   cursor: pointer;
   display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  
+  align-items: center;  
 }
 .logout {
   width: 64px;
@@ -73,6 +71,9 @@
 
   }
 
+  .logout__Container{
+    margin-bottom: 50px;
+  }
   .profile__Container {
     position: relative;
   }
