@@ -7,6 +7,7 @@ import style from "/src/styles/Items.module.css";
 import { filterItems } from "./ItemsFunc/filterItems";
 import { Link } from "react-router-dom";
 import arrow from "/src/assets/arrow-back.svg";
+import searchIcon from "/src/assets/search.svg";
 
 export const Items: FC<IItems> = ({ token }) => {
   const [itemsData, setItemsData] = React.useState([
@@ -23,6 +24,7 @@ export const Items: FC<IItems> = ({ token }) => {
   const [refreshPage, setRefresh] = React.useState<boolean>(false);
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [filteredItems, setFilteredItems] = React.useState<any[]>([]);
+  const [isDataFetching, setDataFetching] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -30,10 +32,10 @@ export const Items: FC<IItems> = ({ token }) => {
         const { data } = await axios.get(`${link}/api/items?populate=*`);
         setItemsData(data.data);
 
-        // Move the following line inside the try block
         setConfirmItem(
           data.data.filter((item: any) => item.attributes.isConfirm === true)
         );
+        setDataFetching(false);
       } catch (error) {
         console.error({ error });
       }
@@ -56,25 +58,21 @@ export const Items: FC<IItems> = ({ token }) => {
       <Link to={"/"}>
         <img src={arrow} className={style.arrow} />
       </Link>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "300px",
-          margin: "0 auto",
-        }}
-      >
+      <div className={style.search__Container}>
+        <img src={searchIcon} alt="search icon" className={style.searchIcon} />
         <input
           type="text"
           value={searchTerm}
           autoFocus
           autoComplete="off"
           onChange={(e) => setSearchTerm(e.target.value)}
+          className={style.search}
         />
-        <Link to={"/items/addItem"}>Разместить свое объявление</Link>
       </div>
-
-      {filteredItems && filteredItems.length ? (
+      <Link to={"/items/addItem"}>Разместить свое объявление</Link>
+      {isDataFetching ? (
+        <p className={style.status}>Загрузка данных...</p>
+      ) : filteredItems && filteredItems.length ? (
         <div className={style.items__Container}>
           {filteredItems.map((item: any) => (
             <Item
@@ -95,7 +93,7 @@ export const Items: FC<IItems> = ({ token }) => {
           ))}
         </div>
       ) : (
-        <p>Объявлений не найдено!</p>
+        <p className={style.status}>Объявлений не найдено!</p>
       )}
     </div>
   );

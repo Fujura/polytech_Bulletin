@@ -1,1 +1,1 @@
-export const link = 'https://bulletin-api.onrender.com'
+export const link = 'https://bulletinstrapi-production.up.railway.app'
