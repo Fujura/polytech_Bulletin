@@ -21,11 +21,12 @@
   background-color: #fff;
   border-radius: 36px;
   margin-top: 20px;
+  margin-left: -30px;
 }
 
 .searchIcon{
   position: relative;
-  left: 380px;
+  left: 350px;
   top: 10px;
 
 }
@@ -52,6 +53,17 @@
 @media screen and (max-width: 880px) {
   .items__Container {
     grid-template-columns: 400px;
+  }
+
+  .search__Container{
+    margin-top: 50px;
+  }
+  .search{
+    width: 280px;
+  }
+  .searchIcon{
+    left: 230px;
+
   }
 }
 
