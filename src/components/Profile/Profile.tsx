@@ -80,7 +80,7 @@ export const Profile: FC<{ token: string; removeCookie: any }> = ({
     <div>
       <div>
         <Link to={"/"}>
-          <img src={arrow} alt="" className={styles.arrow} />
+          <img src={arrow} className={styles.arrow} />
         </Link>
       </div>
       {!!userData && !isFetching ? (

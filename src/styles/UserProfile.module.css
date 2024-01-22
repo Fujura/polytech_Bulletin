@@ -16,6 +16,12 @@
     grid-template-columns: 400px 400px 400px;
     justify-content: center;
 }
+.loading{
+  text-align: center;
+  font-size: 36px;
+  color: #fff;
+  margin: 35vh 0;
+}
 
 @media screen and (max-width: 1324px) {
     .items__Container {

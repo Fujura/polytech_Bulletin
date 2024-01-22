@@ -26,6 +26,7 @@ export const UserProfile: FC<{token: string}> = ({token}) => {
   const [userId, setUserId] = React.useState<number>()
   const [isUserUpdated, ] = React.useState(false);
   const [confirmItem, setConfirmItem] = React.useState<any[]>([]);
+  const [isDataFetching, setDataFetching] = React.useState<boolean>(true);
   const navigate = useNavigate();
   let { id: ID } = useParams();
 
@@ -38,8 +39,9 @@ export const UserProfile: FC<{token: string}> = ({token}) => {
                 Authorization: `Bearer ${token}`,
               },
             });
-  
+          
             setUserId(response.data.id);
+            setDataFetching(false)
           } catch (error) {
             console.error(error);
           }
@@ -69,11 +71,12 @@ export const UserProfile: FC<{token: string}> = ({token}) => {
     
     navigate('/profile')
   }
-
   
   return (
     <div>
-        
+      {isDataFetching ?
+      <p className={styles.loading}>Загрузка...</p> :
+      <>
       <motion.div
         className="container"
         initial={{ scale: 0, opacity: 0, y: 500 }}
@@ -117,6 +120,10 @@ export const UserProfile: FC<{token: string}> = ({token}) => {
         </div>
         
       </div>
+      </>
+      
+    }
+      
     </div>
   );
 };
