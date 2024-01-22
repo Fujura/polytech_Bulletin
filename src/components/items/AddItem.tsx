@@ -4,7 +4,6 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { link } from "../../api/link";
 import styles from "/src/styles/AddItem.module.css";
-import { color } from "framer-motion";
 
 export const AddItem: FC = () => {
   const [userData, setUserData] = React.useState<{ items: [] }>({
