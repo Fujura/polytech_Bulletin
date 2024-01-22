@@ -63,7 +63,6 @@ export const Items: FC<IItems> = ({ token }) => {
         <input
           type="text"
           value={searchTerm}
-          autoFocus
           autoComplete="off"
           onChange={(e) => setSearchTerm(e.target.value)}
           className={style.search}

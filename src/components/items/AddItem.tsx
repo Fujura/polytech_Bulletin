@@ -3,17 +3,18 @@ import React, { FC } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { link } from "../../api/link";
+import styles from "/src/styles/AddItem.module.css";
 
 export const AddItem: FC = () => {
-  const [userData, setUserData] = React.useState<{items: []}>({
-    items: []
-  })
+  const [userData, setUserData] = React.useState<{ items: [] }>({
+    items: [],
+  });
 
   const [formData, setFormData] = React.useState({
     title: "",
     description: "",
     type: "",
-    user: ''
+    user: "",
   });
   const navigate = useNavigate();
   const [cookie] = useCookies(["jwt"]);
@@ -32,29 +33,32 @@ export const AddItem: FC = () => {
             Authorization: `Bearer ${cookie.jwt}`,
           },
         });
-        setUserData(response.data)
+        setUserData(response.data);
       } catch (error) {
         console.error(error);
       }
-    })()
+    })();
   }, [cookie]);
-  
+
   const [isAuth, setIsAuth] = React.useState("");
-  const onChangeInputValue = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+  const onChangeInputValue = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData(() => ({
       ...formData,
-      user: '',
+      user: "",
       [name]: value,
     }));
   };
-  
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
-    if(formData.type === '' || userData.items.length >= 5){
-      console.log('error');
-      alert('ошибка')
+    if (formData.type === "" || userData.items.length >= 5) {
+      console.log("error");
+      alert("ошибка");
       return;
     }
     try {
@@ -63,7 +67,7 @@ export const AddItem: FC = () => {
         {
           data: {
             ...formData,
-            user: userData
+            user: userData,
           },
         },
         {
@@ -76,21 +80,21 @@ export const AddItem: FC = () => {
         title: "",
         description: "",
         type: "",
-        user: ''
+        user: "",
       });
     } catch (error) {
       console.error(error);
     }
   };
   console.log(userData);
-  
+
   return (
-    <div>
+    <div style={{display:'flex', justifyContent: 'center'}}>
       {!cookie.jwt ? (
         <p>{isAuth}</p>
       ) : (
         <form
-          style={{ display: "flex", flexDirection: "column", maxWidth: '400px', margin: '50px auto' }}
+          className={styles.form}
           onSubmit={submitHandler}
         >
           <label htmlFor="title">Заголовок</label>
@@ -99,6 +103,7 @@ export const AddItem: FC = () => {
             name="title"
             value={formData.title}
             onChange={onChangeInputValue}
+            className={styles.input}
           />
 
           <label htmlFor="subtitle">Описание</label>
@@ -107,16 +112,21 @@ export const AddItem: FC = () => {
             name="description"
             value={formData.description}
             onChange={onChangeInputValue}
+            className={styles.input}
           />
 
           <label htmlFor="type">тип объявления</label>
-          <select name="type" onChange={onChangeInputValue} value={formData.type}>
+          <select
+            name="type"
+            onChange={onChangeInputValue}
+            value={formData.type}
+            className={styles.input}
+          >
             <option value=""></option>
             <option value="Работа">Работа</option>
             <option value="Резюме">Резюме</option>
             <option value="Продажа">Продажа</option>
             <option value="Покупка">Покупка</option>
-
           </select>
 
           <button type="submit">Submit</button>
