@@ -22,10 +22,11 @@ export const Profile: FC<{ token: string; removeCookie: any }> = ({
 
   const [isUserUpdated, setUserUpdated] = React.useState(false);
   const [isFetching, setIsFetching] = React.useState<boolean>(true);
+  const [isAuth, setIsAuth] = React.useState<boolean>(false);
+
   const navigate = useNavigate();
   const [refreshPage, setRefresh] = React.useState<boolean>(false);
   const [showLeftBar, setShowLeftBar] = React.useState<boolean>(false);
-
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
 
   React.useEffect(() => {
@@ -45,6 +46,7 @@ export const Profile: FC<{ token: string; removeCookie: any }> = ({
       })();
     } else {
       setTimeout(() => {
+        setIsAuth(false);
         navigate("/");
       }, 2000);
     }
@@ -78,103 +80,109 @@ export const Profile: FC<{ token: string; removeCookie: any }> = ({
 
   return (
     <div>
-      <div>
-        <Link to={"/"}>
-          <img src={arrow} className={styles.arrow} />
-        </Link>
-      </div>
-      {!!userData && !isFetching ? (
-        <div className={styles.profile__Container}>
-          <div
-            style={{
-              transform: `translateX(${showLeftBar ? "0" : "-200px"})`,
-              ...(windowWidth > 768 ? { transform: "translateX(0)" } : {}),
-            }}
-            className={styles.profile__LeftSide}
-          >
-            <div>
-              <img
-                src={
-                  userData.avatarUrl
-                    ? `${link}${userData.avatarUrl}`
-                    : profileIcon
-                }
-                alt="profile icon"
-                className={styles.profilePicture}
-              />
-              <UploadAvatar
-                token={token}
-                username={userData.username}
-                userId={userData.id}
-                avatarUrl={userData.avatarUrl}
-                setUserUpdated={setUserUpdated}
-              />
-              <p>{userData.username}</p>
-            </div>
-
-            <div>
-              <div
-                onClick={() => {
-                  removeCookie("jwt");
-                }}
-                className={styles.logout__Container}
-              >
-                <p>Log Out</p>
-                <img src={logoutIcon} className={styles.logout} />
-              </div>
-            </div>
-          </div>
-          <div
-            className={styles.burgerContainer}
-            onClick={onShowLeftBar}
-            style={
-              showLeftBar
-                ? { transform: "translateX(200px)" }
-                : { transform: "translateX(0)" }
-            }
-          >
-            <span className="burgerLine1"></span>
-            <span className="burgerLine2"></span>
-            <span className="burgerLine3"></span>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "50px",
-              margin: "20px auto 0",
-              marginTop: "100px",
-            }}
-          >
-            {userData.items && userData.items.length > 0 ? (
-              userData.items.map((item: any) => (
-                <Item
-                  key={item.id}
-                  itemId={item.id}
-                  itemStatus={item.isConfirm}
-                  refreshPage={refreshPage}
-                  username={userData.username}
-                  title={item.title}
-                  type={item.type}
-                  description={item.description}
-                  userAvatar={userData.avatarUrl}
-                  token={token}
-                  userId={userData.id}
-                  setRefresh={setRefresh}
-                />
-              ))
-            ) : (
-              <div>
-                <p>У вас нету объявлений</p>
-                <Link to={"/items/addItem"}>Разместить</Link>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : !userData && isFetching ? (
-        <p>загрузка</p>
+      {isAuth ? (
+        <p className={styles.status}>Вы не прошли авторизацию!</p>
       ) : (
-        <p>User is not found</p>
+        <>
+          <div>
+            <Link to={"/"}>
+              <img src={arrow} className={styles.arrow} />
+            </Link>
+          </div>
+          {!!userData && !isFetching ? (
+            <div className={styles.profile__Container}>
+              <div
+                style={{
+                  transform: `translateX(${showLeftBar ? "0" : "-200px"})`,
+                  ...(windowWidth > 768 ? { transform: "translateX(0)" } : {}),
+                }}
+                className={styles.profile__LeftSide}
+              >
+                <div>
+                  <img
+                    src={
+                      userData.avatarUrl
+                        ? `${link}${userData.avatarUrl}`
+                        : profileIcon
+                    }
+                    alt="profile icon"
+                    className={styles.profilePicture}
+                  />
+                  <UploadAvatar
+                    token={token}
+                    username={userData.username}
+                    userId={userData.id}
+                    avatarUrl={userData.avatarUrl}
+                    setUserUpdated={setUserUpdated}
+                  />
+                  <p>{userData.username}</p>
+                </div>
+
+                <div>
+                  <div
+                    onClick={() => {
+                      removeCookie("jwt");
+                    }}
+                    className={styles.logout__Container}
+                  >
+                    <p>Log Out</p>
+                    <img src={logoutIcon} className={styles.logout} />
+                  </div>
+                </div>
+              </div>
+              <div
+                className={styles.burgerContainer}
+                onClick={onShowLeftBar}
+                style={
+                  showLeftBar
+                    ? { transform: "translateX(200px)" }
+                    : { transform: "translateX(0)" }
+                }
+              >
+                <span className="burgerLine1"></span>
+                <span className="burgerLine2"></span>
+                <span className="burgerLine3"></span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "50px",
+                  margin: "20px auto 0",
+                  marginTop: "100px",
+                }}
+              >
+                {userData.items && userData.items.length > 0 ? (
+                  userData.items.map((item: any) => (
+                    <Item
+                      key={item.id}
+                      itemId={item.id}
+                      itemStatus={item.isConfirm}
+                      refreshPage={refreshPage}
+                      username={userData.username}
+                      title={item.title}
+                      type={item.type}
+                      description={item.description}
+                      userAvatar={userData.avatarUrl}
+                      token={token}
+                      userId={userData.id}
+                      setRefresh={setRefresh}
+                    />
+                  ))
+                ) : (
+                  <div>
+                    <p>У вас нету объявлений</p>
+                    <Link to={"/items/addItem"}>Разместить</Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : !userData && isFetching ? (
+            <p>загрузка</p>
+          ) : (
+            <p>User is not found</p>
+          )}
+        </>
       )}
     </div>
   );

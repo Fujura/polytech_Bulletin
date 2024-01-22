@@ -91,9 +91,11 @@ export const Items: FC<IItems> = ({ token }) => {
             />
           ))}
         </div>
-      ) : (
-        <p className={style.status}>Объявлений не найдено!</p>
-      )}
+      ) : 
+              filteredItems.length ? <> </> : (
+                <p className={style.status}>Объявлений не найдено!</p>
+              )
+      }
     </div>
   );
 };

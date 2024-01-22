@@ -9,6 +9,7 @@ import adminIcon from "/src/assets/admin-alt.svg";
 import bulletinIcon from "/src/assets/bulletin.svg";
 import axios from "axios";
 import { link } from "../../api/link";
+import chechBoxIcon from '/src/assets/checkbox.svg';
 
 export const NavBar = () => {
   const [cookies] = useCookies(["jwt"]);
@@ -73,6 +74,15 @@ export const NavBar = () => {
             className={styles.navbar__Icons}
           />
           <p className={styles.navbar__LinkText}>Объявления</p>
+        </Link>
+
+        <Link to={"/items/addItem"} className={styles.navbar__Link}>
+          <img
+            src={chechBoxIcon}
+            alt="bulletin icon"
+            className={styles.navbar__Icons}
+          />
+          <p className={styles.navbar__LinkText}>Разместить</p>
         </Link>
 
         {userData.role && userData.role.name === "Admin" ? (

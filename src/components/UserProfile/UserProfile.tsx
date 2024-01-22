@@ -41,11 +41,11 @@ export const UserProfile: FC<{token: string}> = ({token}) => {
             });
           
             setUserId(response.data.id);
-            setDataFetching(false)
           } catch (error) {
             console.error(error);
           }
         })();
+
       }
       
     if (!!ID) {
@@ -63,7 +63,8 @@ export const UserProfile: FC<{token: string}> = ({token}) => {
       })();
     }
 
-    
+    setDataFetching(false)
+
   }, [isUserUpdated]);
   
   if(ID == userId){

@@ -16,3 +16,10 @@
     border-radius: 12px;
     border: none;
 }
+
+.status{
+    text-align: center;
+    color: #fff;
+    font-size: 36px;
+    margin: 35vh 0;
+  }

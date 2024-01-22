@@ -4,6 +4,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { link } from "../../api/link";
 import styles from "/src/styles/AddItem.module.css";
+import { color } from "framer-motion";
 
 export const AddItem: FC = () => {
   const [userData, setUserData] = React.useState<{ items: [] }>({
@@ -18,47 +19,14 @@ export const AddItem: FC = () => {
   });
   const navigate = useNavigate();
   const [cookie] = useCookies(["jwt"]);
-
-  React.useEffect(() => {
-    if (!!cookie.jwt === false) {
-      setIsAuth("Вы не залогинены!");
-      setTimeout(() => {
-        navigate("/items");
-      }, 2000);
-    }
-    (async () => {
-      try {
-        const response = await axios.get(`${link}/api/users/me?populate=*`, {
-          headers: {
-            Authorization: `Bearer ${cookie.jwt}`,
-          },
-        });
-        setUserData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [cookie]);
-
-  const [isAuth, setIsAuth] = React.useState("");
-  const onChangeInputValue = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(() => ({
-      ...formData,
-      user: "",
-      [name]: value,
-    }));
-  };
-
   const submitHandler = async (e: any) => {
     e.preventDefault();
     if (formData.type === "" || userData.items.length >= 5) {
-      console.log("error");
-      alert("ошибка");
+      setIsSubmited(false);
+      setTimeout(() => {
+        setIsSubmited(null)
+
+      }, 1500);
       return;
     }
     try {
@@ -82,21 +50,63 @@ export const AddItem: FC = () => {
         type: "",
         user: "",
       });
+      setIsSubmited(true)
+      setTimeout(() => {
+        setIsSubmited(null)
+
+      }, 1500);
     } catch (error) {
+      setIsSubmited(false);
+      setTimeout(() => {
+        setIsSubmited(null)
+
+      }, 1500);
       console.error(error);
     }
   };
-  console.log(userData);
+
+  React.useEffect(() => {
+    if (!!cookie.jwt === false) {
+      setIsAuth(false);
+      setTimeout(() => {
+        navigate("/signIn");
+      }, 2000);
+    }
+    (async () => {
+      try {
+        const response = await axios.get(`${link}/api/users/me?populate=*`, {
+          headers: {
+            Authorization: `Bearer ${cookie.jwt}`,
+          },
+        });
+        setUserData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [cookie, submitHandler]);
+
+  const [isAuth, setIsAuth] = React.useState<boolean>(true);
+  const [isSubmited, setIsSubmited] = React.useState<boolean | null>(null)
+  const onChangeInputValue = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(() => ({
+      ...formData,
+      user: "",
+      [name]: value,
+    }));
+  };
+
+  
 
   return (
-    <div style={{display:'flex', justifyContent: 'center'}}>
-      {!cookie.jwt ? (
-        <p>{isAuth}</p>
-      ) : (
-        <form
-          className={styles.form}
-          onSubmit={submitHandler}
-        >
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      {isAuth ? (
+        <form className={styles.form} onSubmit={submitHandler}>
           <label htmlFor="title">Заголовок</label>
           <input
             type="text"
@@ -128,9 +138,19 @@ export const AddItem: FC = () => {
             <option value="Продажа">Продажа</option>
             <option value="Покупка">Покупка</option>
           </select>
-
-          <button type="submit">Submit</button>
+          <p style={{color: '#fff'}}>Максимальное кол-во объявлений - 5!</p>
+          <button type="submit">Разместить</button>
+          {isSubmited ?
+          <p style={{color: '#00B64F'}}>Ваше объявление успешно отправлено на модерацию!</p>
+          :
+          isSubmited === null ? 
+          <></>
+          :
+          <p style={{color: '#FF0000'}}>Упс.. Что то пошло не так</p>  
+        }
         </form>
+      ) : (
+        <p className={styles.status}>Для начала пройдите авторизацию!</p>
       )}
     </div>
   );

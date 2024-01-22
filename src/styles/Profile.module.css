@@ -63,6 +63,13 @@
   z-index: 4;
 }
 
+.status{
+  text-align: center;
+  color: #fff;
+  font-size: 36px;
+  margin: 35vh 0;
+}
+
 @media screen and (max-width: 768px) {
   .profile__LeftSide {
     position: fixed;
