@@ -3,7 +3,8 @@ import { Item } from "../items/Item";
 import { link } from "../../api/link";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import styles from '/src/styles/AdminPanel.module.css';
+import styles from "/src/styles/AdminPanel.module.css";
+import { Loading } from "../Loading/Loading";
 
 export const AdminPanel: FC<{ token: string }> = ({ token }) => {
   const [itemsData, setItemsData] = React.useState([
@@ -66,7 +67,7 @@ export const AdminPanel: FC<{ token: string }> = ({ token }) => {
           navigate("/");
         }
 
-        setDataFetching(false)
+        setDataFetching(false);
       } catch (error) {
         console.error(error);
         navigate("/");
@@ -78,25 +79,28 @@ export const AdminPanel: FC<{ token: string }> = ({ token }) => {
 
   return (
     <div>
+      <h2 className={styles.title}>Админ панель</h2>
       {isDataFetching ? (
-        <p className={styles.DataProgress}>Загрузка данных...</p>
+        <Loading /> 
       ) : itemsData.length ? (
-        itemsData.map((item: any) => (
-          <Item
-            key={item.id}
-            itemId={item.id}
-            refreshPage={refreshPage}
-            username={item.attributes.user?.data?.attributes?.username}
-            title={item.attributes.title}
-            type={item.attributes.type}
-            description={item.attributes.description}
-            userAvatar={item.attributes.user?.data?.attributes?.avatarUrl}
-            token={token}
-            userRole={userData.role.name}
-            userId={item.attributes.user?.data?.id}
-            setRefresh={setRefresh}
-          />
-        ))
+        <div className={styles.items__Container}>
+          {itemsData.map((item: any) => (
+            <Item
+              key={item.id}
+              itemId={item.id}
+              refreshPage={refreshPage}
+              username={item.attributes.user?.data?.attributes?.username}
+              title={item.attributes.title}
+              type={item.attributes.type}
+              description={item.attributes.description}
+              userAvatar={item.attributes.user?.data?.attributes?.avatarUrl}
+              token={token}
+              userRole={userData.role.name}
+              userId={item.attributes.user?.data?.id}
+              setRefresh={setRefresh}
+            />
+          ))}
+        </div>
       ) : (
         <p className={styles.DataProgress}>
           Тут пусто...

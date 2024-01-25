@@ -4,25 +4,14 @@ import { link } from "../../api/link";
 import { IItems } from "../../interfaces/Items/IItems";
 import { Item } from "./Item";
 import style from "/src/styles/Items.module.css";
-import { filterItems } from "./ItemsFunc/filterItems";
 import { Link } from "react-router-dom";
 import arrow from "/src/assets/arrow-back.svg";
-import searchIcon from "/src/assets/search.svg";
+import { SearchItem } from "./SearchItem";
+import { Loading } from "../Loading/Loading";
 
 export const Items: FC<IItems> = ({ token }) => {
-  const [itemsData, setItemsData] = React.useState([
-    {
-      id: 0,
-      attributes: {
-        title: "",
-        userId: 0,
-        isConfirm: false,
-      },
-    },
-  ]);
   const [confirmItem, setConfirmItem] = React.useState<any[]>([]);
   const [refreshPage, setRefresh] = React.useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [filteredItems, setFilteredItems] = React.useState<any[]>([]);
   const [isDataFetching, setDataFetching] = React.useState<boolean>(true);
 
@@ -30,11 +19,9 @@ export const Items: FC<IItems> = ({ token }) => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${link}/api/items?populate=*`);
-        setItemsData(data.data);
-
-        setConfirmItem(
-          data.data.filter((item: any) => item.attributes.isConfirm === true)
-        );
+        const confirmedItems = data.data.filter((item: any) => item.attributes.isConfirm === true);
+        setConfirmItem(confirmedItems);
+        setFilteredItems(confirmedItems); // Set filtered items initially to all confirmed items
         setDataFetching(false);
       } catch (error) {
         console.error({ error });
@@ -44,34 +31,16 @@ export const Items: FC<IItems> = ({ token }) => {
     fetchData();
   }, [token, refreshPage]);
 
-  React.useEffect(() => {
-    const Debounce = setTimeout(() => {
-      const filteredItems = filterItems(searchTerm, confirmItem);
-      setFilteredItems(filteredItems);
-    }, 400);
-
-    return () => clearTimeout(Debounce);
-  }, [searchTerm, itemsData]);
-
   return (
     <div>
       <Link to={"/"}>
         <img src={arrow} className={style.arrow} />
       </Link>
-      <div className={style.search__Container}>
-        <img src={searchIcon} alt="search icon" className={style.searchIcon} />
-        <input
-          type="text"
-          value={searchTerm}
-          autoComplete="off"
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className={style.search}
-        />
-      </div>
-      <Link to={"/items/addItem"}>Разместить свое объявление</Link>
+
+      <SearchItem itemsData={confirmItem} setFiltredItems={setFilteredItems} />
       {isDataFetching ? (
-        <p className={style.status}>Загрузка данных...</p>
-      ) : filteredItems && filteredItems.length ? (
+        <Loading />
+      ) : filteredItems.length ? (
         <div className={style.items__Container}>
           {filteredItems.map((item: any) => (
             <Item
@@ -91,11 +60,9 @@ export const Items: FC<IItems> = ({ token }) => {
             />
           ))}
         </div>
-      ) : 
-              filteredItems.length ? <> </> : (
-                <p className={style.status}>Объявлений не найдено!</p>
-              )
-      }
+      ) : (
+        <p className={style.status}>Объявлений не найдено!</p>
+      )}
     </div>
   );
 };

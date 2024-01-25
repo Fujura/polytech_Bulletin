@@ -4,3 +4,34 @@
     font-size: 36px;
     margin: 35vh 0;
 }
+
+.title{
+    font-size: 36px;
+    color: #fff;
+}
+.items__Container{
+    display: grid;
+    grid-template-columns: 400px 400px 400px;
+    gap: 50px;
+    margin: 50px auto;
+    justify-content: center;
+}
+
+@media screen and (max-width: 1324px) {
+    .items__Container {
+      grid-template-columns: 400px 400px;
+    }
+  }
+  
+  @media screen and (max-width: 880px) {
+    .items__Container {
+      grid-template-columns: 400px;
+    }
+  }
+  
+  @media screen and (max-width: 425px) {
+    .items__Container {
+      grid-template-columns: 300px;
+    }
+  }
+  
