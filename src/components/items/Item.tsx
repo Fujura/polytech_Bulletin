@@ -41,7 +41,6 @@ export const Item: FC<IItem> = ({
   };
 
   React.useEffect(() => {
-    if (!!token) {
       (async () => {
         try {
           const response = await axios.get(`${link}/api/users/me?populate=*`, {
@@ -51,13 +50,19 @@ export const Item: FC<IItem> = ({
           });
 
           setUserData(response.data);
-          setDataFetching(false);
+          console.log('a');
+          
+          setDataFetching(false)
+
         } catch (error) {
           console.error(error);
+          console.log('b');
+          setDataFetching(false)
+
+
         }
       })();
-    }
-  }, [token]);
+ }, [token]);
 
   const showBtnHandler = () => {
     setShowBtn(!showBtn ? true : false);
@@ -159,10 +164,20 @@ export const Item: FC<IItem> = ({
 
             <div className={styles.item__Footer}>
               <p className={styles.item__BodyDescription}>{description}</p>
-              <div onClick={showBtnHandler} style={{cursor: 'pointer'}}>
-                <img src={dotsIcon} className={styles.dotsIcon} />
-              </div>
-              <div className={styles.btn__Container} style={{ display: showBtn ? "flex" : "none" }}>
+              {!token ? (
+                // User is not logged in, don't show dots icon
+                <></>
+              ) : (
+                <div onClick={showBtnHandler} style={{ cursor: "pointer" }}>
+                  <img src={dotsIcon} className={styles.dotsIcon} />
+                </div>
+              )}
+              
+              <div
+                className={styles.btn__Container}
+                style={{ display: showBtn ? "flex" : "none" }}
+              >
+
                 {userId == userData.id || userRole === userData.role.name ? (
                   <button onClick={deleteItemHandler}>Удалить</button>
                 ) : (
@@ -183,7 +198,6 @@ export const Item: FC<IItem> = ({
                   <></>
                 )}
               </div>
-              
             </div>
           </div>
         </>
