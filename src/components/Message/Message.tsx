@@ -1,6 +1,5 @@
 import axios from "axios";
 import React from "react";
-import { Link } from "react-router-dom";
 import { link } from "../../api/link";
 import { useCookies } from "react-cookie";
 import styles from "/src/styles/Message.module.css";
@@ -55,12 +54,7 @@ export const Message = () => {
   return (
     <>
       {userData && itemsData.length && userData.role && userData.role.name === "Admin" ? (
-        <div className={styles.message__Container}>
-          <>
-            Хей админ! Есть непроверенные объявления. Бегом проверять!
-            <Link to={"/adminPanel"}>Админ панель</Link>
-          </>
-        </div>
+        <div className={styles.circle}></div>
       ) : (
         <></>
       )}

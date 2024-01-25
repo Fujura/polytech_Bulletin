@@ -10,6 +10,7 @@ import bulletinIcon from "/src/assets/bulletin.svg";
 import axios from "axios";
 import { link } from "../../api/link";
 import chechBoxIcon from '/src/assets/checkbox.svg';
+import { Message } from "../Message/Message";
 
 export const NavBar = () => {
   const [cookies] = useCookies(["jwt"]);
@@ -87,6 +88,7 @@ export const NavBar = () => {
 
         {userData.role && userData.role.name === "Admin" ? (
           <Link to={"/adminPanel"} className={styles.navbar__Link}>
+            <Message />
             <img src={adminIcon} alt="" className={styles.navbar__Icons} />
             <p className={styles.navbar__LinkText}>Админ панель</p>
           </Link>
