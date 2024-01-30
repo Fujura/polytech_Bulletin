@@ -6,8 +6,9 @@ import styles from "/src/styles/Profile.module.css";
 import profileIcon from "/public/profileDefault.png";
 import logoutIcon from "/src/assets/logout.svg";
 import { UploadAvatar } from "./UploadAvatar/UploadAvatar";
-import { Item } from "../items/Item";
 import arrow from "/src/assets/arrow-back.svg";
+import { Item } from "../items/Item/Item";
+import { Loading } from "../Loading/Loading";
 
 export const Profile: FC<{ token: string; removeCookie: any }> = ({
   token,
@@ -18,6 +19,9 @@ export const Profile: FC<{ token: string; removeCookie: any }> = ({
     id: 0,
     avatarUrl: "",
     items: [],
+    role: {
+      name: ''
+    }
   });
 
   const [isUserUpdated, setUserUpdated] = React.useState(false);
@@ -40,6 +44,7 @@ export const Profile: FC<{ token: string; removeCookie: any }> = ({
           });
 
           setUserData(response.data);
+          setIsFetching(false);
         } catch (error) {
           console.error(error);
         }
@@ -50,8 +55,6 @@ export const Profile: FC<{ token: string; removeCookie: any }> = ({
         navigate("/");
       }, 2000);
     }
-
-    setIsFetching(false);
     if (window.innerWidth > 768) {
       setShowLeftBar(true);
     }
@@ -81,7 +84,11 @@ export const Profile: FC<{ token: string; removeCookie: any }> = ({
   return (
     <div>
       {isAuth ? (
-        <p className={styles.status}>Вы не прошли авторизацию!</p>
+        <p className={styles.status}>Вы не авторизованы!  </p>
+      ) : isFetching ? (
+        <div className={styles.loading}>
+          <Loading />
+        </div>
       ) : (
         <>
           <div>

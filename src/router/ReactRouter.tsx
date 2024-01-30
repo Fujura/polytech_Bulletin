@@ -5,7 +5,7 @@ import { Register } from "../components/Authorization/Register/Register";
 import { Profile } from "../components/Profile/Profile";
 import { Items } from "../components/items/Items";
 import { useCookies } from "react-cookie";
-import { AddItem } from "../components/items/AddItem";
+import { AddItem } from "../components/items/AddItem/AddItem";
 import Rule from "../components/WebSiteRule/Rule";
 import { UserProfile } from "../components/UserProfile/UserProfile";
 import { AdminPanel } from "../components/AdminPanel/AdminPanel";

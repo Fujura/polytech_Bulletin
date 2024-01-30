@@ -1,14 +1,15 @@
 import React, { FC } from "react";
-import { IItem } from "../../interfaces/Items/IItem";
 import styles from "/src/styles/Item.module.css";
-import { link } from "../../api/link";
 import defaultAvatar from "/public/profileDefault.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { ClickModal } from "./ClickModal";
 import { motion } from "framer-motion";
-import { LoadingItem } from "../Loading/LoadingItem";
 import dotsIcon from "/src/assets/menu-dots-vertical.svg";
+import { IItem } from "../../../interfaces/Items/IItem";
+import { link } from "../../../api/link";
+import { ClickModal } from "../ItemsFunc/ClickModal";
+import { LoadingItem } from "../../Loading/LoadingItem";
+
 export const Item: FC<IItem> = ({
   description,
   userAvatar,
@@ -49,14 +50,11 @@ export const Item: FC<IItem> = ({
             },
           });
 
-          setUserData(response.data);
-          console.log('a');
-          
+          setUserData(response.data);          
           setDataFetching(false)
 
         } catch (error) {
           console.error(error);
-          console.log('b');
           setDataFetching(false)
 
 
@@ -77,11 +75,7 @@ export const Item: FC<IItem> = ({
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!!refreshPage) {
-        setRefresh(!refreshPage);
-      } else {
-        setRefresh(!refreshPage);
-      }
+      setRefresh(!refreshPage)
     } catch (error) {
       console.log({ error });
     }
@@ -104,13 +98,11 @@ export const Item: FC<IItem> = ({
       }
     );
 
-    if (!!refreshPage) {
-      setRefresh(!refreshPage);
-    } else {
-      setRefresh(!refreshPage);
-    }
+    setRefresh(!refreshPage)
+
   };
 
+  
   return (
     <motion.div
       className={styles.item}
@@ -165,7 +157,6 @@ export const Item: FC<IItem> = ({
             <div className={styles.item__Footer}>
               <p className={styles.item__BodyDescription}>{description}</p>
               {!token ? (
-                // User is not logged in, don't show dots icon
                 <></>
               ) : (
                 <div onClick={showBtnHandler} style={{ cursor: "pointer" }}>
@@ -178,7 +169,7 @@ export const Item: FC<IItem> = ({
                 style={{ display: showBtn ? "flex" : "none" }}
               >
 
-                {userId == userData.id || userRole === userData.role.name ? (
+                {userId == userData.id || userRole === userData.role.name  ? (
                   <button onClick={deleteItemHandler}>Удалить</button>
                 ) : (
                   <></>

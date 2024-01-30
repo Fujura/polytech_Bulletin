@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { FC } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { link } from "../../api/link";
+import { link } from "../../../api/link";
 import styles from "/src/styles/AddItem.module.css";
 import confetti from "canvas-confetti";
 

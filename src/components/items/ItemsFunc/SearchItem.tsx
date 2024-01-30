@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import searchIcon from "/src/assets/search.svg";
 import style from "/src/styles/Items.module.css";
-import { filterItems } from "./ItemsFunc/filterItems";
-import { ISearchItem } from "../../interfaces/Items/ISearchItem";
+import { filterItems } from "./filterItems";
+import { ISearchItem } from "../../../interfaces/Items/ISearchItem";
 import { Link } from "react-router-dom";
 
 export const SearchItem: FC<ISearchItem> = ({itemsData, setFiltredItems}) => {

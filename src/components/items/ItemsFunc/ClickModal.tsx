@@ -11,8 +11,8 @@ import {
     ModalFooter,
     ModalHeader,
   } from "reactstrap";
-import { link } from "../../api/link";
-import { IModal } from "../../interfaces/IModal";
+import { link } from "../../../api/link";
+import { IModal } from "../../../interfaces/IModal";
 
 export const ClickModal: FC<IModal> = ({token, toggle, modal, itemId}) => {
   const [userData, setUser]= React.useState()

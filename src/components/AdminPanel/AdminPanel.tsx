@@ -1,10 +1,11 @@
 import React, { FC, useEffect } from "react";
-import { Item } from "../items/Item";
+
 import { link } from "../../api/link";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "/src/styles/AdminPanel.module.css";
 import { Loading } from "../Loading/Loading";
+import { Item } from "../items/Item/Item";
 
 export const AdminPanel: FC<{ token: string }> = ({ token }) => {
   const [itemsData, setItemsData] = React.useState([

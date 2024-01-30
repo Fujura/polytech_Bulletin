@@ -70,6 +70,9 @@
   margin: 35vh 0;
 }
 
+.loading{
+  margin: 47svh 0;
+}
 @media screen and (max-width: 768px) {
   .profile__LeftSide {
     position: fixed;
@@ -82,7 +85,7 @@
     margin-bottom: 50px;
   }
   .profile__Container {
-    position: relative;
+    /* position: relative; */
   }
   .burgerContainer {
     display: flex;

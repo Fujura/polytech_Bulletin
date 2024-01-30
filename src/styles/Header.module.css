@@ -69,4 +69,8 @@
         line-height: 45px;
         color: #fff;
     }
+
+    .button{
+        width: 260px;
+    }
 }

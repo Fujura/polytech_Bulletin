@@ -9,7 +9,7 @@ import adminIcon from "/src/assets/admin-alt.svg";
 import bulletinIcon from "/src/assets/bulletin.svg";
 import axios from "axios";
 import { link } from "../../api/link";
-import chechBoxIcon from '/src/assets/checkbox.svg';
+import chechBoxIcon from "/src/assets/checkbox.svg";
 import { Message } from "../Message/Message";
 
 export const NavBar = () => {
@@ -24,6 +24,7 @@ export const NavBar = () => {
       name: "",
     },
   });
+
   React.useEffect(() => {
     if (!!cookies.jwt) {
       setDisplay({
@@ -36,10 +37,9 @@ export const NavBar = () => {
         profile: "none",
       });
     }
-  }, []);
 
-  React.useEffect(() => {
-    const fetchUserData = async () => {
+    if (!cookies.jwt) return;
+    (async () => {
       try {
         const response = await axios.get(`${link}/api/users/me?populate=role`, {
           headers: {
@@ -51,12 +51,8 @@ export const NavBar = () => {
       } catch (error) {
         console.error(error);
       }
-    };
-
-    fetchUserData();
+    })();
   }, [cookies]);
-
-  console.log(userData);
 
   return (
     <nav className={styles.navbar}>
@@ -103,9 +99,7 @@ export const NavBar = () => {
         >
           <img
             src={
-              userData.avatarUrl
-                ? `${link}${userData.avatarUrl}`
-                : profileIcon
+              userData.avatarUrl ? `${link}${userData.avatarUrl}` : profileIcon
             }
             alt="profile icon"
             className={styles.navbar__ProfileImg}
