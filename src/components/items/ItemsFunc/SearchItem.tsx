@@ -5,7 +5,7 @@ import { filterItems } from "./filterItems";
 import { ISearchItem } from "../../../interfaces/Items/ISearchItem";
 import { Link } from "react-router-dom";
 
-export const SearchItem: FC<ISearchItem> = ({itemsData, setFiltredItems}) => {
+export const SearchItem: FC<ISearchItem> = ({ itemsData, setFiltredItems }) => {
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   React.useEffect(() => {
     const Debounce = setTimeout(() => {
@@ -15,6 +15,7 @@ export const SearchItem: FC<ISearchItem> = ({itemsData, setFiltredItems}) => {
 
     return () => clearTimeout(Debounce);
   }, [searchTerm, itemsData]);
+  
   return (
     <div>
       <div className={style.search__Container}>

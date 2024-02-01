@@ -31,9 +31,16 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
   const [hasUser, setHasUser] = React.useState<boolean>(false);
   const navigate = useNavigate();
   let { id: ID } = useParams();
-  if (ID == userId) navigate("/profile");
 
   React.useEffect(() => {
+    if (ID == userId) {
+      navigate("/profile");
+      setDataFetching(false);
+    }
+    else setTimeout(() => {
+      setDataFetching(false);
+    }, 1000);
+
     if (!!token) {
       (async () => {
         try {
@@ -42,11 +49,9 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
               Authorization: `Bearer ${token}`,
             },
           });
-          setDataFetching(false);
           setUserId(response.data.id);
         } catch (error) {
           console.error(error);
-          setDataFetching(false);
         }
       })();
     }
@@ -61,16 +66,21 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
           setConfirmItem(
             response.data.items.filter((item: any) => item.isConfirm === true)
           );
-          setDataFetching(false);
           setHasUser(true);
         } catch (error) {
           console.error({ error });
-          setDataFetching(false);
         }
       })();
     }
-  }, [isUserUpdated]);
+    
+  }, [isUserUpdated, userId]);
 
+  // React.useEffect(() => {
+    // if (ID == userId) {
+    //   navigate("/profile");
+    //   setDataFetching(false);
+    // } else setDataFetching(false);
+  // }, [isUserUpdated, isDataFetching]);
 
   return (
     <>
@@ -82,7 +92,9 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
       ) : (
         <div>
           {!hasUser ? (
-            <p className={styles.userNotFound}>Такого пользователя не существует</p>
+            <p className={styles.userNotFound}>
+              Такого пользователя не существует
+            </p>
           ) : (
             <>
               <motion.div
@@ -113,10 +125,8 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
                 <h3 style={{ color: "#fff", marginTop: "100px" }}>
                   Объявления пользователя:
                 </h3>
-                {Array.isArray(userData.items) &&
-                  userData.items.length > 0 ? (
-                <div className={styles.items__Container}>
-                  
+                {Array.isArray(userData.items) && userData.items.length > 0 ? (
+                  <div className={styles.items__Container}>
                     {confirmItem.map((item) => (
                       <Item
                         key={item.id}
@@ -130,11 +140,12 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
                         userId={userData.id}
                       />
                     ))}
-                    </div>
-                  ) : (
-                    <p className={styles.bulletinNotFound}>У пользователя нет объявлений</p>
-                  )}
-                
+                  </div>
+                ) : (
+                  <p className={styles.bulletinNotFound}>
+                    У пользователя нет объявлений
+                  </p>
+                )}
               </div>
             </>
           )}

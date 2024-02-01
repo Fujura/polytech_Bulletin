@@ -18,7 +18,7 @@ export const Items: FC<IItems> = ({ token }) => {
 
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [itemsPerPage] = React.useState<number>(9);
-
+  
   React.useEffect(() => {
     (async () => {
       try {
@@ -43,6 +43,7 @@ export const Items: FC<IItems> = ({ token }) => {
     firstItemIndex,
     lastItemIndex
   );
+
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (

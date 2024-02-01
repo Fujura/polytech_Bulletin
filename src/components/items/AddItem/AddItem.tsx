@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { FC } from "react";
+import React, { FC, FormEvent } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { link } from "../../../api/link";
@@ -21,7 +21,8 @@ export const AddItem: FC = () => {
   const [isSubmited, setIsSubmited] = React.useState<boolean | null>(null);
   const navigate = useNavigate();
   const [cookie] = useCookies(["jwt"]);
-  const submitHandler = async (e: any) => {
+
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.type === "" || userData.items.length >= 5) {
       setIsSubmited(false);
@@ -102,21 +103,7 @@ export const AddItem: FC = () => {
       [name]: value,
     }));
   };
-  // const confettiSubmitHandler = () => {
-  //   if (isSubmited === false || isSubmited === null) {
-  //     console.log("error");
-  //     console.log(isSubmited);
 
-  //     return;
-  //   } else {
-  //     console.log("ok");
-
-  //     confetti({
-  //       particleCount: 150,
-  //       spread: 60,
-  //     });
-  //   }
-  // };
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       {isAuth ? (
