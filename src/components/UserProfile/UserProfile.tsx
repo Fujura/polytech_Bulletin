@@ -7,8 +7,9 @@ import styles from "/src/styles/UserProfile.module.css";
 import { motion } from "framer-motion";
 import { Item } from "../items/Item/Item";
 import { Loading } from "../Loading/Loading";
+import { IUserProfile } from "../../interfaces/IUserProfile";
 
-export const UserProfile: FC<{ token: string }> = ({ token }) => {
+export const UserProfile: FC<IUserProfile> = ({ token }) => {
   const [userData, setUserData] = React.useState({
     username: "",
     id: 0,
@@ -36,10 +37,10 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
     if (ID == userId) {
       navigate("/profile");
       setDataFetching(false);
-    }
-    else setTimeout(() => {
-      setDataFetching(false);
-    }, 1000);
+    } else
+      setTimeout(() => {
+        setDataFetching(false);
+      }, 1000);
 
     if (!!token) {
       (async () => {
@@ -72,15 +73,7 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
         }
       })();
     }
-    
   }, [isUserUpdated, userId]);
-
-  // React.useEffect(() => {
-    // if (ID == userId) {
-    //   navigate("/profile");
-    //   setDataFetching(false);
-    // } else setDataFetching(false);
-  // }, [isUserUpdated, isDataFetching]);
 
   return (
     <>
@@ -129,15 +122,18 @@ export const UserProfile: FC<{ token: string }> = ({ token }) => {
                   <div className={styles.items__Container}>
                     {confirmItem.map((item) => (
                       <Item
+                        options={{
+                          itemId: item.id,
+                          type: item.type,
+                          username: userData.username,
+                          title: item.title,
+                          description: item.description,
+                          userAvatar: userData.avatarUrl,
+                          token: token,
+                          userId: userData.id,
+                          
+                        }}
                         key={item.id}
-                        itemId={item.id}
-                        type={item.type}
-                        username={userData.username}
-                        title={item.title}
-                        description={item.description}
-                        userAvatar={userData.avatarUrl}
-                        token={token}
-                        userId={userData.id}
                       />
                     ))}
                   </div>

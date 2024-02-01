@@ -63,7 +63,7 @@
   z-index: 4;
 }
 
-.status{
+.status {
   text-align: center;
   color: #fff;
   font-size: 36px;
@@ -84,9 +84,7 @@
   .logout__Container{
     margin-bottom: 50px;
   }
-  .profile__Container {
-    /* position: relative; */
-  }
+
   .burgerContainer {
     display: flex;
     margin-top: 100px;

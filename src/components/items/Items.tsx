@@ -10,14 +10,13 @@ import { SearchItem } from "./ItemsFunc/SearchItem";
 import { Loading } from "../Loading/Loading";
 import { Pagination } from "./Pagination/Pagination.tsx";
 
-export const Items: FC<IItems> = ({ token }) => {
+export const Items: FC<IItems> = ({ token, userData, setUpdatePage, updatePage }) => {
   const [confirmItem, setConfirmItem] = React.useState<any[]>([]);
-  const [refreshPage, setRefresh] = React.useState<boolean>(false);
   const [filteredItems, setFilteredItems] = React.useState<any[]>([]);
   const [isDataFetching, setDataFetching] = React.useState<boolean>(true);
 
   const [currentPage, setCurrentPage] = React.useState<number>(1);
-  const [itemsPerPage] = React.useState<number>(9);
+  const [itemsPerPage] = React.useState<number>(9);  
   
   React.useEffect(() => {
     (async () => {
@@ -28,14 +27,14 @@ export const Items: FC<IItems> = ({ token }) => {
         );
         setConfirmItem(confirmedItems);
         setFilteredItems(confirmedItems);
-
         setDataFetching(false);
+
       } catch (error) {
         console.error({ error });
         setDataFetching(false);
       }
     })();
-  }, [token, refreshPage]);
+  }, [token, updatePage]);
 
   const lastItemIndex: number = currentPage * itemsPerPage;
   const firstItemIndex: number = lastItemIndex - itemsPerPage;
@@ -61,20 +60,19 @@ export const Items: FC<IItems> = ({ token }) => {
             {currentItems.map((item: any) => (
               <Item
                 key={item.id}
-                itemId={item.id}
-                refreshPage={refreshPage}
-                username={
-                  item.attributes.user?.data?.attributes?.username || ""
-                }
-                title={item.attributes.title}
-                type={item.attributes.type}
-                description={item.attributes.description}
-                userAvatar={
-                  item.attributes.user?.data?.attributes?.avatarUrl || ""
-                }
-                token={token}
-                userId={item.attributes.user?.data?.id || ""}
-                setRefresh={setRefresh}
+                options={{
+                  itemId: item.id,
+                  username: item.attributes.user?.data?.attributes?.username || "",
+                  title:item.attributes.title,
+                  type: item.attributes.type,
+                  description: item.attributes.description,
+                  userAvatar: item.attributes.user?.data?.attributes?.avatarUrl || "",
+                  token: token,
+                  userId: item.attributes.user?.data?.id || "",
+                  setUpdatePage: setUpdatePage,
+                }}
+                userData ={userData}
+               
               />
             ))}
           </div>

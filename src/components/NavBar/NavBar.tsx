@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "/public/logo.png";
 import styles from "/src/styles/NavBar.module.css";
 import { Link } from "react-router-dom";
@@ -7,10 +7,10 @@ import profileIcon from "/public/profileDefault.png";
 import LoginIcon from "/src/assets/login.svg";
 import adminIcon from "/src/assets/admin-alt.svg";
 import bulletinIcon from "/src/assets/bulletin.svg";
-import axios from "axios";
 import { link } from "../../api/link";
 import chechBoxIcon from "/src/assets/checkbox.svg";
 import { Message } from "../Message/Message";
+import { NavBarContext } from "./NavBarContext";
 
 export const NavBar = () => {
   const [cookies] = useCookies(["jwt"]);
@@ -18,12 +18,8 @@ export const NavBar = () => {
     auth: "flex",
     profile: "none",
   });
-  const [userData, setUserData] = React.useState({
-    avatarUrl: "",
-    role: {
-      name: "",
-    },
-  });
+
+  const { userData } = useContext(NavBarContext);
 
   React.useEffect(() => {
     if (!!cookies.jwt) {
@@ -37,21 +33,6 @@ export const NavBar = () => {
         profile: "none",
       });
     }
-
-    if (!cookies.jwt) return;
-    (async () => {
-      try {
-        const response = await axios.get(`${link}/api/users/me?populate=role`, {
-          headers: {
-            Authorization: `Bearer ${cookies.jwt}`,
-          },
-        });
-
-        setUserData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
   }, [cookies]);
 
   return (

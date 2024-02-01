@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 import styles from "/src/styles/AdminPanel.module.css";
 import { Loading } from "../Loading/Loading";
 import { Item } from "../items/Item/Item";
+import { IAdminPanel } from "../../interfaces/IAdminPanel";
 
-export const AdminPanel: FC<{ token: string }> = ({ token }) => {
+export const AdminPanel: FC<IAdminPanel> = ({ token, userData, setUpdatePage, updatePage }) => {
   const [itemsData, setItemsData] = React.useState([
     {
       id: 0,
@@ -19,15 +20,20 @@ export const AdminPanel: FC<{ token: string }> = ({ token }) => {
     },
   ]);
 
-  const [userData, setUserData] = React.useState({
-    role: {
-      name: "",
-    },
-  });
-
-  const [refreshPage, setRefresh] = React.useState<boolean>(false);
   const navigate = useNavigate();
   const [isDataFetching, setDataFetching] = React.useState<boolean>(true);
+
+  if (
+    userData?.role &&
+    userData.role.name !== "Admin" &&
+    userData.role.name !== ""
+  ) {
+    navigate("/");
+  }
+
+  setTimeout(() => {
+    setDataFetching(false);
+  }, 1000);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,58 +53,31 @@ export const AdminPanel: FC<{ token: string }> = ({ token }) => {
     };
 
     fetchData();
-  }, [token, refreshPage]);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`${link}/api/users/me?populate=role`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setUserData(response.data);
-
-        if (
-          response.data.role &&
-          response.data.role.name !== "Admin" &&
-          response.data.role.name !== ""
-        ) {
-          navigate("/");
-        }
-
-        setDataFetching(false);
-      } catch (error) {
-        console.error(error);
-        navigate("/");
-      }
-    };
-
-    fetchUserData();
-  }, [token]);
+  }, [token, updatePage]);
 
   return (
     <div>
       <h2 className={styles.title}>Админ панель</h2>
       {isDataFetching ? (
-        <Loading /> 
+        <Loading />
       ) : itemsData.length ? (
         <div className={styles.items__Container}>
           {itemsData.map((item: any) => (
             <Item
               key={item.id}
-              itemId={item.id}
-              refreshPage={refreshPage}
-              username={item.attributes.user?.data?.attributes?.username}
-              title={item.attributes.title}
-              type={item.attributes.type}
-              description={item.attributes.description}
-              userAvatar={item.attributes.user?.data?.attributes?.avatarUrl}
-              token={token}
-              userRole={userData.role.name}
-              userId={item.attributes.user?.data?.id}
-              setRefresh={setRefresh}
+              options={{
+                itemId: item.id,
+                username: item.attributes.user?.data?.attributes?.username,
+                title: item.attributes.title,
+                type: item.attributes.type,
+                description: item.attributes.description,
+                userAvatar: item.attributes.user?.data?.attributes?.avatarUrl,
+                token: token,
+                userRole: userData?.role.name,
+                userId: item.attributes.user?.data?.id,
+                setUpdatePage: setUpdatePage
+              }}
+              userData={userData}
             />
           ))}
         </div>

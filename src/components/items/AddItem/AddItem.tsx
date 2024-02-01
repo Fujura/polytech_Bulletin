@@ -105,7 +105,7 @@ export const AddItem: FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div className={styles.form__Container}>
       {isAuth ? (
         <form className={styles.form} onSubmit={submitHandler}>
           <label htmlFor="title">Заголовок</label>

@@ -12,55 +12,57 @@ import { LoadingItem } from "../../Loading/LoadingItem";
 
 export const Item: FC<IItem> = React.memo(
   ({
-    description,
-    userAvatar,
-    type,
-    title,
-    userRole,
-    setRefresh,
-    token,
-    userId,
-    username,
-    itemId,
-    itemStatus,
+    options: {
+      description,
+      userAvatar,
+      type,
+      title,
+      userRole,
+      token,
+      userId,
+      username,
+      itemId,
+      itemStatus,
+      setUpdatePage,
+    },
+    userData,
   }) => {
-    const [userData, setUserData] = React.useState({
-      username: "",
-      id: 0,
-      avatarUrl: "",
-      role: {
-        name: "",
-      },
-    });
     const [modal, setModal] = React.useState<boolean>(false);
-    const [dataFetching, setDataFetching] = React.useState<boolean>(true);
     const [showBtn, setShowBtn] = React.useState<boolean>(false);
-    const [updating, setUpdating] = React.useState<boolean>(false);
+    const [isLoading, setLoading] = React.useState<boolean>(false);
+
     const toggle = React.useCallback(() => {
       setModal((prevModal) => !prevModal);
     }, []);
+
+    const user = userData || {
+      id: 0,
+      username: "",
+      avatarUrl: "",
+      role: { name: "" },
+    };
 
     const showBtnHandler = React.useCallback(() => {
       setShowBtn((prevShowBtn) => !prevShowBtn);
     }, []);
 
     const deleteItemHandler = React.useCallback(async () => {
-      setUpdating(true);
       try {
         await axios.delete(`${link}/api/items/${itemId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setRefresh((prevRefresh: boolean) => !prevRefresh);
+        setLoading(true);
+        
+        setUpdatePage(true);
       } catch (error) {
         console.log({ error });
       }
-    }, [itemId, setRefresh, token]);
+    }, [itemId, token, setUpdatePage]);
+    
 
     const publicItemHandler = React.useCallback(async () => {
-      setUpdating(true);
-
       try {
         await axios.put(
           `${link}/api/items/${itemId}`,
@@ -75,142 +77,129 @@ export const Item: FC<IItem> = React.memo(
             },
           }
         );
-
-        setRefresh((prevRefresh: boolean) => !prevRefresh);
+        setLoading(true);
+        
+        setTimeout(() => {
+          setUpdatePage(true);
+          
+        }, 500);
+      
       } catch (error) {
         console.error(error);
       }
-    }, [itemId, setRefresh, token]);
-
-    React.useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `${link}/api/users/me?populate=*`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          setUserData(response.data);
-          setDataFetching(false);
-        } catch (error) {
-          console.error(error);
-          setDataFetching(false);
-        }
-      };
-
-      fetchData();
-    }, [token]);
+    }, [itemId, token]);
 
     const userAvatarUrl = React.useMemo(() => {
-      return userAvatar === "" || userAvatar === null || userAvatar === undefined
+      return userAvatar === "" ||
+        userAvatar === null ||
+        userAvatar === undefined
         ? defaultAvatar
         : `${link}${userAvatar}`;
     }, [userAvatar]);
 
+
     return (
-      <motion.div
-        className={styles.item}
-        initial={{ scale: 0.5, opacity: 0, y: 300 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 40,
-        }}
-      >
-        {dataFetching || updating ? (
-          <LoadingItem />
-        ) : (
-          <>
-            <div className={styles.item__Header}>
-              <Link to={`/profile/${userId}`} className={styles.item__HeaderBy}>
-                <img
-                  className={styles.item__HeaderAvatar}
-                  src={
-                    userAvatar === "" ||
-                    userAvatar === null ||
-                    userAvatar === undefined
-                      ? defaultAvatar
-                      : `${userAvatarUrl}`
-                  }
-                  loading="lazy"
-                  alt="user avatar"
-                />
-
-                <p className={styles.item__HeaderUsername}>{username}</p>
-              </Link>
-            </div>
-            <hr />
-            <div className={styles.item__Container}>
-              <div className={styles.item__Body}>
-                <h5 className={styles.item__HeaderTitle}>{title}</h5>
-                <p className={styles.item__HeaderType}>Тип: {type}</p>
-                {itemStatus === undefined ? (
-                  <></>
-                ) : itemStatus ? (
-                  <p className={styles.item__HeaderStatus}>
-                    Статус: опубликовано
-                  </p>
-                ) : (
-                  <p className={styles.item__HeaderStatus}>
-                    Статус: на модерации{" "}
-                  </p>
-                )}
-              </div>
-              <div className={styles.line}></div>
-
-              <div className={styles.item__Footer}>
-                <p className={styles.item__BodyDescription}>{description}</p>
-                {!token ? (
-                  <></>
-                ) : (
-                  <div
-                    onClick={showBtnHandler}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <img src={dotsIcon} className={styles.dotsIcon} />
-                  </div>
-                )}
-
-                <div
-                  className={styles.btn__Container}
-                  style={{ display: showBtn ? "flex" : "none" }}
+      <>
+        <motion.div
+          className={styles.item}
+          initial={{ scale: 0.5, opacity: 0, y: 300 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 40,
+          }}
+        >
+          {isLoading ? (
+            <LoadingItem />
+          ) : (
+            <>
+              <div className={styles.item__Header}>
+                <Link
+                  to={`/profile/${userId}`}
+                  className={styles.item__HeaderBy}
                 >
-                  {userId == userData.id || userRole === userData.role.name ? (
-                    <button onClick={deleteItemHandler}>Удалить</button>
-                  ) : (
+                  <img
+                    className={styles.item__HeaderAvatar}
+                    src={
+                      userAvatar === "" ||
+                      userAvatar === null ||
+                      userAvatar === undefined
+                        ? defaultAvatar
+                        : `${userAvatarUrl}`
+                    }
+                    loading="lazy"
+                    alt="user avatar"
+                  />
+
+                  <p className={styles.item__HeaderUsername}>{username}</p>
+                </Link>
+              </div>
+              <hr />
+              <div className={styles.item__Container}>
+                <div className={styles.item__Body}>
+                  <h5 className={styles.item__HeaderTitle}>{title}</h5>
+                  <p className={styles.item__HeaderType}>Тип: {type}</p>
+                  {itemStatus === undefined ? (
                     <></>
-                  )}
-                  {userRole == "Admin" ? (
-                    <button onClick={publicItemHandler}>Опубликовать</button>
+                  ) : itemStatus ? (
+                    <p className={styles.item__HeaderStatus}>
+                      Статус: опубликовано
+                    </p>
                   ) : (
-                    <></>
-                  )}
-                  {userRole === undefined ? (
-                    userId != userData.id && userData.id != 0 ? (
-                      <button onClick={toggle}>Откликнуться</button>
-                    ) : (
-                      <></>
-                    )
-                  ) : (
-                    <></>
+                    <p className={styles.item__HeaderStatus}>
+                      Статус: на модерации{" "}
+                    </p>
                   )}
                 </div>
+                <div className={styles.line}></div>
+
+                <div className={styles.item__Footer}>
+                  <p className={styles.item__BodyDescription}>{description}</p>
+                  {!token ? (
+                    <></>
+                  ) : (
+                    <div onClick={showBtnHandler} style={{ cursor: "pointer" }}>
+                      <img src={dotsIcon} className={styles.dotsIcon} />
+                    </div>
+                  )}
+
+                  <div
+                    className={styles.btn__Container}
+                    style={{ display: showBtn ? "flex" : "none" }}
+                  >
+                    {userId == user.id || userRole === user.role.name ? (
+                      <button onClick={deleteItemHandler}>Удалить</button>
+                    ) : (
+                      <></>
+                    )}
+                    {userRole == "Admin" ? (
+                      <button onClick={publicItemHandler}>Опубликовать</button>
+                    ) : (
+                      <></>
+                    )}
+                    {userRole === undefined ? (
+                      userId != userData?.id && userData?.id != 0 ? (
+                        <button onClick={toggle}>Откликнуться</button>
+                      ) : (
+                        <></>
+                      )
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </>
-        )}
-        <ClickModal
-          token={token}
-          toggle={toggle}
-          modal={modal}
-          itemId={itemId}
-        />
-      </motion.div>
+            </>
+          )}
+          <ClickModal
+            token={token}
+            toggle={toggle}
+            modal={modal}
+            itemId={itemId}
+          />
+        </motion.div>
+      </>
     );
   }
 );
