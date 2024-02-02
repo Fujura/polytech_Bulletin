@@ -19,13 +19,11 @@ export const SearchItem: FC<ISearchItem> = ({
     const debounce = setTimeout(() => {
       let filteredItems;
   
-      if (!!searchTerm.length && !!selectValue.length) {
+      if (!!searchTerm.length) {
+        // Filter by search text
         filteredItems = filterItems(searchTerm, selectValue, itemsData);
-      } else if (!!searchTerm.length) {
-        filteredItems = itemsData.filter((item) =>
-          item.attributes.title.toLowerCase().includes(searchTerm.toLowerCase())
-        );
       } else {
+        // No search text, show all items
         filteredItems = itemsData;
       }
   
