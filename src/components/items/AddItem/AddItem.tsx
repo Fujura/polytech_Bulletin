@@ -5,12 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { link } from "../../../api/link";
 import styles from "/src/styles/AddItem.module.css";
 import confetti from "canvas-confetti";
+import { IAddItem } from "../../../interfaces/IAddItem";
 
-export const AddItem: FC = () => {
-  const [userData, setUserData] = React.useState<{ items: [] }>({
-    items: [],
-  });
-
+export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
   const [formData, setFormData] = React.useState({
     title: "",
     description: "",
@@ -24,7 +21,7 @@ export const AddItem: FC = () => {
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.type === "" || userData.items.length >= 5) {
+    if (formData.type === "" || (userData && userData.items && userData.items.length >= 5)) {
       setIsSubmited(false);
       setTimeout(() => {
         setIsSubmited(null);
@@ -56,7 +53,7 @@ export const AddItem: FC = () => {
       confetti({
         particleCount: 150,
         spread: 60,
-      }); 
+      });
       setTimeout(() => {
         setIsSubmited(null);
       }, 2500);
@@ -67,6 +64,7 @@ export const AddItem: FC = () => {
       }, 2500);
       console.error(error);
     }
+    setUpdatePage(true);
   };
 
   React.useEffect(() => {
@@ -76,20 +74,7 @@ export const AddItem: FC = () => {
         navigate("/signIn");
       }, 2000);
     }
-    (async () => {
-      try {
-        const response = await axios.get(`${link}/api/users/me?populate=*`, {
-          headers: {
-            Authorization: `Bearer ${cookie.jwt}`,
-          },
-        });
-        setUserData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
   }, [cookie, submitHandler]);
-
 
   const onChangeInputValue = (
     e:
@@ -116,7 +101,6 @@ export const AddItem: FC = () => {
             onChange={onChangeInputValue}
             className={styles.input}
           />
-
           <label htmlFor="subtitle">Описание</label>
           <input
             type="text"
@@ -125,7 +109,6 @@ export const AddItem: FC = () => {
             onChange={onChangeInputValue}
             className={styles.input}
           />
-
           <label htmlFor="type">тип объявления</label>
           <select
             name="type"
@@ -140,9 +123,9 @@ export const AddItem: FC = () => {
             <option value="Покупка">Покупка</option>
           </select>
           <p style={{ color: "#fff" }}>Максимальное кол-во объявлений - 5!</p>
-          <button type="submit">
+          <button type="submit" disabled={(userData && userData.items && userData.items.length >= 5)}>
             Разместить
-          </button>
+          </button>{" "}
           {isSubmited ? (
             <p style={{ color: "#00B64F" }}>
               Ваше объявление успешно отправлено на модерацию!

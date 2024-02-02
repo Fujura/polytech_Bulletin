@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Item } from "../../items/Item/Item";
 import { FC } from "react";
+import { AnimatePresence } from "framer-motion";
 
 export const ItemList: FC<{
   options: {
@@ -8,7 +9,7 @@ export const ItemList: FC<{
     token: string;
     setUpdatePage: any;
   };
-}> = ({ options: { userData,  token, setUpdatePage } }) => {
+}> = ({ options: { userData, token, setUpdatePage } }) => {
   return (
     <div
       style={{
@@ -19,11 +20,12 @@ export const ItemList: FC<{
         marginTop: "100px",
       }}
     >
-      {userData.items && userData.items.length > 0 ? (
-        userData.items.map((item: any) => (
-          <Item
-            key={item.id}
-            options={{
+      <AnimatePresence>
+        {userData.items && userData.items.length > 0 ? (
+          userData.items.map((item: any) => (
+            <Item
+              key={item.id}
+              options={{
                 itemId: item.id,
                 type: item.type,
                 username: userData.username,
@@ -33,17 +35,18 @@ export const ItemList: FC<{
                 token: token,
                 userId: userData.id,
                 itemStatus: item.isConfirm,
-                setUpdatePage: setUpdatePage
+                setUpdatePage: setUpdatePage,
               }}
-            userData={userData}
-          />
-        ))
-      ) : (
-        <div>
-          <p>У вас нету объявлений</p>
-          <Link to={"/items/addItem"}>Разместить</Link>
-        </div>
-      )}
+              userData={userData}
+            />
+          ))
+        ) : (
+          <div>
+            <p>У вас нету объявлений</p>
+            <Link to={"/items/addItem"}>Разместить</Link>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

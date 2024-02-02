@@ -7,8 +7,14 @@ import styles from "/src/styles/AdminPanel.module.css";
 import { Loading } from "../Loading/Loading";
 import { Item } from "../items/Item/Item";
 import { IAdminPanel } from "../../interfaces/IAdminPanel";
+import { AnimatePresence } from "framer-motion";
 
-export const AdminPanel: FC<IAdminPanel> = ({ token, userData, setUpdatePage, updatePage }) => {
+export const AdminPanel: FC<IAdminPanel> = ({
+  token,
+  userData,
+  setUpdatePage,
+  updatePage,
+}) => {
   const [itemsData, setItemsData] = React.useState([
     {
       id: 0,
@@ -62,24 +68,26 @@ export const AdminPanel: FC<IAdminPanel> = ({ token, userData, setUpdatePage, up
         <Loading />
       ) : itemsData.length ? (
         <div className={styles.items__Container}>
-          {itemsData.map((item: any) => (
-            <Item
-              key={item.id}
-              options={{
-                itemId: item.id,
-                username: item.attributes.user?.data?.attributes?.username,
-                title: item.attributes.title,
-                type: item.attributes.type,
-                description: item.attributes.description,
-                userAvatar: item.attributes.user?.data?.attributes?.avatarUrl,
-                token: token,
-                userRole: userData?.role.name,
-                userId: item.attributes.user?.data?.id,
-                setUpdatePage: setUpdatePage
-              }}
-              userData={userData}
-            />
-          ))}
+          <AnimatePresence>
+            {itemsData.map((item: any) => (
+              <Item
+                key={item.id}
+                options={{
+                  itemId: item.id,
+                  username: item.attributes.user?.data?.attributes?.username,
+                  title: item.attributes.title,
+                  type: item.attributes.type,
+                  description: item.attributes.description,
+                  userAvatar: item.attributes.user?.data?.attributes?.avatarUrl,
+                  token: token,
+                  userRole: userData?.role.name,
+                  userId: item.attributes.user?.data?.id,
+                  setUpdatePage: setUpdatePage,
+                }}
+                userData={userData}
+              />
+            ))}
+          </AnimatePresence>
         </div>
       ) : (
         <p className={styles.DataProgress}>

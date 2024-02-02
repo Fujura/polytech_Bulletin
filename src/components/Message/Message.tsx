@@ -1,17 +1,14 @@
 import axios from "axios";
-import React from "react";
+import React, { FC } from "react";
 import { link } from "../../api/link";
 import { useCookies } from "react-cookie";
 import styles from "/src/styles/Message.module.css";
+import { IMessage } from "../../interfaces/IMessage";
 
-export const Message = () => {
+export const Message:FC<IMessage> = ({userData}) => {
   const [cookie] = useCookies(["jwt"]);
   const [itemsData, setItemsData] = React.useState<[]>([]);
-  const [userData, setUserData] = React.useState<{ role: { name: string } }>({
-    role: {
-      name: "",
-    },
-  });
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,23 +30,6 @@ export const Message = () => {
     fetchData();
   }, [cookie]);
 
-  React.useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`${link}/api/users/me?populate=role`, {
-          headers: {
-            Authorization: `Bearer ${cookie.jwt}`,
-          },
-        });
-
-        setUserData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchUserData();
-  }, [cookie.jwt]);
 
   return (
     <>

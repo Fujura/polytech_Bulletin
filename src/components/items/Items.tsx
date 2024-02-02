@@ -9,15 +9,22 @@ import arrow from "/src/assets/arrow-back.svg";
 import { SearchItem } from "./ItemsFunc/SearchItem";
 import { Loading } from "../Loading/Loading";
 import { Pagination } from "./Pagination/Pagination.tsx";
+import { AnimatePresence } from "framer-motion";
 
-export const Items: FC<IItems> = ({ token, userData, setUpdatePage, updatePage }) => {
+export const Items: FC<IItems> = ({
+  token,
+  userData,
+  setUpdatePage,
+  updatePage,
+}) => {
   const [confirmItem, setConfirmItem] = React.useState<any[]>([]);
   const [filteredItems, setFilteredItems] = React.useState<any[]>([]);
   const [isDataFetching, setDataFetching] = React.useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = React.useState<string>("");
 
   const [currentPage, setCurrentPage] = React.useState<number>(1);
-  const [itemsPerPage] = React.useState<number>(9);  
-  
+  const [itemsPerPage] = React.useState<number>(9);
+
   React.useEffect(() => {
     (async () => {
       try {
@@ -28,7 +35,6 @@ export const Items: FC<IItems> = ({ token, userData, setUpdatePage, updatePage }
         setConfirmItem(confirmedItems);
         setFilteredItems(confirmedItems);
         setDataFetching(false);
-
       } catch (error) {
         console.error({ error });
         setDataFetching(false);
@@ -43,7 +49,17 @@ export const Items: FC<IItems> = ({ token, userData, setUpdatePage, updatePage }
     lastItemIndex
   );
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => {
+    // if(searchTerm.length > 0){
+      
+    // }
+    setCurrentPage(pageNumber);
+    setDataFetching(true);
+    setTimeout(() => {
+      setDataFetching(false);
+
+    }, 500);
+  };
 
   return (
     <div>
@@ -51,30 +67,33 @@ export const Items: FC<IItems> = ({ token, userData, setUpdatePage, updatePage }
         <img src={arrow} className={style.arrow} />
       </Link>
 
-      <SearchItem itemsData={confirmItem} setFiltredItems={setFilteredItems} />
+      <SearchItem itemsData={confirmItem} setFiltredItems={setFilteredItems} setDataFetching ={setDataFetching} searchTermOptions={{ searchTerm, setSearchTerm }} />
       {isDataFetching ? (
         <Loading />
       ) : filteredItems.length ? (
         <>
           <div className={style.items__Container}>
-            {currentItems.map((item: any) => (
-              <Item
-                key={item.id}
-                options={{
-                  itemId: item.id,
-                  username: item.attributes.user?.data?.attributes?.username || "",
-                  title:item.attributes.title,
-                  type: item.attributes.type,
-                  description: item.attributes.description,
-                  userAvatar: item.attributes.user?.data?.attributes?.avatarUrl || "",
-                  token: token,
-                  userId: item.attributes.user?.data?.id || "",
-                  setUpdatePage: setUpdatePage,
-                }}
-                userData ={userData}
-               
-              />
-            ))}
+            <AnimatePresence>
+              {currentItems.map((item: any) => (
+                <Item
+                  key={item.id}
+                  options={{
+                    itemId: item.id,
+                    username:
+                      item.attributes.user?.data?.attributes?.username || "",
+                    title: item.attributes.title,
+                    type: item.attributes.type,
+                    description: item.attributes.description,
+                    userAvatar:
+                      item.attributes.user?.data?.attributes?.avatarUrl || "",
+                    token: token,
+                    userId: item.attributes.user?.data?.id || "",
+                    setUpdatePage: setUpdatePage,
+                  }}
+                  userData={userData}
+                />
+              ))}
+            </AnimatePresence>
           </div>
           {filteredItems.length > itemsPerPage ? (
             <Pagination

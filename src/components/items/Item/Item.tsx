@@ -3,7 +3,7 @@ import styles from "/src/styles/Item.module.css";
 import defaultAvatar from "/public/profileDefault.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import {  motion } from "framer-motion";
 import dotsIcon from "/src/assets/menu-dots-vertical.svg";
 import { IItem } from "../../../interfaces/Items/IItem";
 import { link } from "../../../api/link";
@@ -47,22 +47,22 @@ export const Item: FC<IItem> = React.memo(
     }, []);
 
     const deleteItemHandler = React.useCallback(async () => {
+      setLoading(true);
+
       try {
         await axios.delete(`${link}/api/items/${itemId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setLoading(true);
-        
         setUpdatePage(true);
       } catch (error) {
         console.log({ error });
       }
     }, [itemId, token, setUpdatePage]);
-    
 
     const publicItemHandler = React.useCallback(async () => {
+      setLoading(true);
       try {
         await axios.put(
           `${link}/api/items/${itemId}`,
@@ -77,13 +77,7 @@ export const Item: FC<IItem> = React.memo(
             },
           }
         );
-        setLoading(true);
-        
-        setTimeout(() => {
-          setUpdatePage(true);
-          
-        }, 500);
-      
+        setUpdatePage(true);
       } catch (error) {
         console.error(error);
       }
@@ -97,18 +91,19 @@ export const Item: FC<IItem> = React.memo(
         : `${link}${userAvatar}`;
     }, [userAvatar]);
 
-
     return (
       <>
         <motion.div
           className={styles.item}
-          initial={{ scale: 0.5, opacity: 0, y: 300 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1}}
+          exit={{ scale: 0 }}
           transition={{
             type: "spring",
             stiffness: 300,
             damping: 40,
           }}
+          
         >
           {isLoading ? (
             <LoadingItem />
@@ -197,6 +192,7 @@ export const Item: FC<IItem> = React.memo(
             toggle={toggle}
             modal={modal}
             itemId={itemId}
+            userData={userData}
           />
         </motion.div>
       </>

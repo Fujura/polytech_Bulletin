@@ -1,5 +1,5 @@
-import axios from "axios";
-import React, { FC } from "react";
+// import axios from "axios";
+import { FC } from "react";
 import {
     Form,
     Button,
@@ -11,47 +11,32 @@ import {
     ModalFooter,
     ModalHeader,
   } from "reactstrap";
-import { link } from "../../../api/link";
+// import { link } from "../../../api/link";
 import { IModal } from "../../../interfaces/IModal";
 
-export const ClickModal: FC<IModal> = ({token, toggle, modal, itemId}) => {
-  const [userData, setUser]= React.useState()
+export const ClickModal: FC<IModal> = ({ toggle, modal}) => {
 
-  React.useEffect(()=>{
-    (async () => {
-        try {
-          const response = await axios.get(`${link}/api/users/me?populate=*`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
 
-          setUser(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      })();
-  },[token])
   
-  const updateUserResponses = async () => {
-    try {
-      await axios.put(
-        `${link}/api/items/${itemId}?populate=*`,
-        {
-            attributes: {
-                user_responses: userData
-            }
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch (error) {
-      console.log({ error });
-    }
-  };
+  // const updateUserResponses = async () => {
+  //   try {
+  //     await axios.put(
+  //       `${link}/api/items/${itemId}?populate=*`,
+  //       {
+  //           attributes: {
+  //               user_responses: userData
+  //           }
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.log({ error });
+  //   }
+  // };
 
   return (
     <Modal isOpen={modal} toggle={toggle}>
@@ -69,7 +54,7 @@ export const ClickModal: FC<IModal> = ({token, toggle, modal, itemId}) => {
         </Form>
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" onClick={updateUserResponses}>
+        <Button color="primary">
           Отправить
         </Button>
         <Button color="secondary" onClick={toggle}>

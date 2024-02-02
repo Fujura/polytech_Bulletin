@@ -54,7 +54,7 @@ const ReactRouter = () => {
       fetchData();
       setUpdatePage(false);
     }
-  }, [cookie.jwt, Item, updatePage]);
+  }, [cookie.jwt, Item, updatePage, userData]);
 
   return (
     <Router>
@@ -95,7 +95,10 @@ const ReactRouter = () => {
                 />
               }
             />
-            <Route path="/items/addItem" element={<AddItem />} />
+            <Route
+              path="/items/addItem"
+              element={<AddItem setUpdatePage={setUpdatePage} userData={userData} />}
+            />
             <Route
               path="/adminPanel"
               element={

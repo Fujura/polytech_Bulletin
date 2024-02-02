@@ -33,7 +33,8 @@ export const NavBar = () => {
         profile: "none",
       });
     }
-  }, [cookies]);
+  }, [cookies, userData]);
+
 
   return (
     <nav className={styles.navbar}>
@@ -65,7 +66,7 @@ export const NavBar = () => {
 
         {userData.role && userData.role.name === "Admin" ? (
           <Link to={"/adminPanel"} className={styles.navbar__Link}>
-            <Message />
+            <Message userData={userData}/>
             <img src={adminIcon} alt="" className={styles.navbar__Icons} />
             <p className={styles.navbar__LinkText}>Админ панель</p>
           </Link>
