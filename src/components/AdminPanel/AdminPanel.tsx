@@ -61,6 +61,8 @@ export const AdminPanel: FC<IAdminPanel> = ({
     fetchData();
   }, [token, updatePage]);
 
+  console.log(itemsData);
+  
   return (
     <div>
       <h2 className={styles.title}>Админ панель</h2>
@@ -76,7 +78,7 @@ export const AdminPanel: FC<IAdminPanel> = ({
                   itemId: item.id,
                   username: item.attributes.user?.data?.attributes?.username,
                   title: item.attributes.title,
-                  type: item.attributes.type,
+                  type: item.attributes.item_type.data.attributes.type,
                   description: item.attributes.description,
                   userAvatar: item.attributes.user?.data?.attributes?.avatarUrl,
                   token: token,

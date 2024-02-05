@@ -1,27 +1,30 @@
 import { FC } from "react";
 import styles from "/src/styles/Pagination.module.css";
 import { IPagination } from "../../../interfaces/Items/Pagination/IPagination";
+import { Link } from "react-router-dom";
 export const Pagination: FC<IPagination> = ({
-  itemsPerPage,
-  totalItems,
-  paginate,
+  pageCount,
+  currentPage
 }) => {
   const pageNumbers = [];
 
-  for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
+  for (let i = 1; i <= pageCount; i++) {
     pageNumbers.push(i);
   }
+  
   return (
     <div>
       <ul className={styles.pagination}>
         {pageNumbers.map((num) => (
+          <Link to={`/items/page/${num}`} key={num}
+          >
           <button
             className={styles.page__Item}
-            onClick={() => paginate(num)}
-            key={num}
+            style={currentPage === num ? {backgroundColor: 'gray'} : {}}
           >
-            {num}
+            {num}            
           </button>
+          </Link>
         ))}
       </ul>
     </div>

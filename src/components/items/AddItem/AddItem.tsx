@@ -11,17 +11,37 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
   const [formData, setFormData] = React.useState({
     title: "",
     description: "",
-    type: "",
     user: "",
   });
+
   const [isAuth, setIsAuth] = React.useState<boolean>(true);
   const [isSubmited, setIsSubmited] = React.useState<boolean | null>(null);
   const navigate = useNavigate();
   const [cookie] = useCookies(["jwt"]);
+  const [selectDataValue, setSelectDataValue] = React.useState<any>();
+  const [selectedValue, setSelectedValue] = React.useState<number | string>('')
+
+
+  React.useEffect(()=>{
+    const changeSelectValue = async() =>{
+      try {
+        await axios.get(`${link}/api/item-types/${selectedValue}`).then(({data}) => {
+          setSelectDataValue(data.data) 
+          console.log(data.data);
+          
+        })
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+    changeSelectValue()
+  },[selectedValue]);
+
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.type === "" || (userData && userData.items && userData.items.length >= 5)) {
+    if ((userData && userData.items && userData.items.length >= 5 || selectedValue == '')) {
       setIsSubmited(false);
       setTimeout(() => {
         setIsSubmited(null);
@@ -35,6 +55,7 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
           data: {
             ...formData,
             user: userData,
+            item_type: selectDataValue
           },
         },
         {
@@ -46,9 +67,9 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
       setFormData({
         title: "",
         description: "",
-        type: "",
         user: "",
       });
+      setSelectedValue('')
       setIsSubmited(true);
       confetti({
         particleCount: 150,
@@ -74,13 +95,16 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
         navigate("/signIn");
       }, 2000);
     }
-  }, [cookie, submitHandler]);
 
+    
+  }, [cookie, submitHandler]);
+  
   const onChangeInputValue = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
+    
     const { name, value } = e.target;
     setFormData(() => ({
       ...formData,
@@ -89,6 +113,7 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
     }));
   };
 
+  
   return (
     <div className={styles.form__Container}>
       {isAuth ? (
@@ -109,19 +134,21 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
             onChange={onChangeInputValue}
             className={styles.input}
           />
+          
           <label htmlFor="type">тип объявления</label>
           <select
             name="type"
-            onChange={onChangeInputValue}
-            value={formData.type}
+            onChange={(e: any) => setSelectedValue(e.target.value)}
+            value={selectedValue}
             className={styles.input}
           >
             <option value=""></option>
-            <option value="Работа">Работа</option>
-            <option value="Резюме">Резюме</option>
-            <option value="Продажа">Продажа</option>
-            <option value="Покупка">Покупка</option>
+            <option value="1">Резюме</option>
+            <option value="2">Вакансия</option>
+            <option value="3">Продажа</option>
+            <option value="4">Покупка</option>
           </select>
+
           <p style={{ color: "#fff" }}>Максимальное кол-во объявлений - 5!</p>
           <button type="submit" disabled={(userData && userData.items && userData.items.length >= 5)}>
             Разместить

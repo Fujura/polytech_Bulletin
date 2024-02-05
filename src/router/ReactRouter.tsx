@@ -27,7 +27,6 @@ const ReactRouter = () => {
     },
     items: [],
   });
-
   const [isLoading, setLoading] = React.useState<boolean>(true);
   const [updatePage, setUpdatePage] = React.useState<boolean>(false);
 
@@ -54,12 +53,12 @@ const ReactRouter = () => {
       fetchData();
       setUpdatePage(false);
     }
-  }, [cookie.jwt, Item, updatePage, userData]);
+  }, [cookie.jwt, Item, updatePage]);
 
   return (
     <Router>
       {isLoading ? (
-        <div style={{ height: "100%", margin: "auto 0" }}>
+        <div style={{ height: "100vh", margin: "auto 0" }}>
           <LoadingItem />
         </div>
       ) : (
@@ -85,7 +84,19 @@ const ReactRouter = () => {
             />
             <Route path="/rules" element={<Rule />} />
             <Route
-              path="/items"
+              path="/items/page/:id"
+              element={
+                <Items
+                  token={cookie.jwt}
+                  userData={userData}
+                  setUpdatePage={setUpdatePage}
+                  updatePage={updatePage}
+                />
+              }
+            />
+
+            <Route
+              path="/items/page/:id/filtred-type/:typeId"
               element={
                 <Items
                   token={cookie.jwt}
@@ -97,7 +108,9 @@ const ReactRouter = () => {
             />
             <Route
               path="/items/addItem"
-              element={<AddItem setUpdatePage={setUpdatePage} userData={userData} />}
+              element={
+                <AddItem setUpdatePage={setUpdatePage} userData={userData} />
+              }
             />
             <Route
               path="/adminPanel"

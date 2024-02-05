@@ -46,7 +46,7 @@ export const NavBar = () => {
         </div>
       </div>
       <div className={styles.navbar__LinksContainer}>
-        <Link to={"/items"} className={styles.navbar__Link}>
+        <Link to={"/items/page/1"} className={styles.navbar__Link}>
           <img
             src={bulletinIcon}
             alt="bulletin icon"
