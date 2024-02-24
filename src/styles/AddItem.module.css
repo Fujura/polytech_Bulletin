@@ -11,6 +11,12 @@
   width: 400px;
 }
 
+.arrow {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+}
+
 .input {
   background-color: #fff;
   color: #000;

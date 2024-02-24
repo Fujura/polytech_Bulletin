@@ -56,6 +56,7 @@ export const Item: FC<IItem> = React.memo(
           },
         });
         setUpdatePage(true);
+        setLoading(false);
       } catch (error) {
         console.log({ error });
       }
@@ -79,6 +80,7 @@ export const Item: FC<IItem> = React.memo(
           }
         );
         setUpdatePage(true);
+        setLoading(false)
       } catch (error) {
         console.error(error);
       }

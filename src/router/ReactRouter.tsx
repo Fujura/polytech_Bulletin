@@ -10,11 +10,10 @@ import Rule from "../components/WebSiteRule/Rule";
 import { UserProfile } from "../components/UserProfile/UserProfile";
 import { AdminPanel } from "../components/AdminPanel/AdminPanel";
 import React from "react";
-import axios from "axios";
 import { link } from "../api/link";
-import { Item } from "../components/items/Item/Item";
 import { NavBarProvider } from "../components/NavBar/NavBarContext";
 import { LoadingItem } from "../components/Loading/LoadingItem";
+import { fetchDataService } from "../services/strapi.service";
 
 const ReactRouter = () => {
   const [cookie, , removeCookie] = useCookies(["jwt"]);
@@ -29,36 +28,20 @@ const ReactRouter = () => {
   });
   const [isLoading, setLoading] = React.useState<boolean>(true);
   const [updatePage, setUpdatePage] = React.useState<boolean>(false);
-
+  const params = {
+    method: 'get',
+    url: `${link}/api/users/me?populate=*`,
+    headers: { Authorization: `Bearer ${cookie.jwt}`},
+    states: {setData: setUserData, setLoading}
+  };
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${link}/api/users/me?populate=*`, {
-          headers: {
-            Authorization: `Bearer ${cookie.jwt}`,
-          },
-        });
-
-        setUserData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-
-    if (updatePage) {
-      fetchData();
-      setUpdatePage(false);
-    }
-  }, [cookie.jwt, Item, updatePage]);
+    fetchDataService(params);
+  }, [cookie.jwt, updatePage]);
 
   return (
     <Router>
       {isLoading ? (
-        <div style={{ height: "100vh", margin: "auto 0" }}>
+        <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <LoadingItem />
         </div>
       ) : (

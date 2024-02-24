@@ -9,6 +9,13 @@
     font-size: 36px;
     color: #fff;
 }
+
+.arrow {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+}
+
 .items__Container{
     display: grid;
     grid-template-columns: 400px 400px 400px;

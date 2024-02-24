@@ -9,5 +9,5 @@ export interface IItems{
         };
       } | undefined;
       setUpdatePage: any;
-      updatePage: boolean;
+      updatePage?: boolean;
 }

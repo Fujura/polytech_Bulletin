@@ -4,6 +4,7 @@
   height: 100svh;
   border-radius: 0 16px 16px 0;
   /* padding: 15px 10px; */
+  z-index: 10;
 }
 
 .navbar__LinksContainer {
@@ -66,7 +67,9 @@
   align-items: center;
 }
 
-
+.activeLink{
+  background-color: #000;
+}
 
 @media screen and (max-width: 768px) {
   .navbar {

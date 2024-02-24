@@ -1,24 +1,37 @@
-// import axios from 'axios';
-// import { link } from '../api/link';
+import axios from 'axios';
+import { FetchDataServiceParams } from '../interfaces/IFetchDataService';
 
-// class StrapiService {
-// 	private URL = link;
 
-// 	async getItems(data: any) {
-// 		return axios.post(`${this.URL}/api/items?populate=*`);
-// 	}
 
-// 	async Register(data: any) {
-// 		return axios.post(`${this.URL}/auth/local/register`, data);
-// 	}
+export const fetchDataService = async (params: FetchDataServiceParams): Promise<void> => {
+    const { method, url, headers, data, states } = params;
+    states.setLoading(true);
+    
+    try {
+        let response;
+        if (method === 'get') {
+            response = await axios.get(url, { headers });            
+        } else {
+            response = await axios.request({
+                method,
+                url,
+                headers,
+                data,
+            });
+            console.log(2);
+            
+        }
 
-// 	// async AuthMe(jwt: string) {
-// 	// 	return axios.get(`${this.URL}/users/me`, {
-// 	// 		headers: {
-// 	// 			Authorization: `Bearer ${jwt}`,
-// 	// 		},
-// 	// 	});
-// 	// }
-// }
 
-// export default new StrapiService();
+        if (states.setData) {
+            states.setData(response.data);
+            
+            
+        }
+
+        states.setLoading(false);
+    } catch (error) {
+        console.error('Ошибка при выполнении запроса:', error);
+        states.setLoading(false);
+    }
+};

@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { FC, FormEvent } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { link } from "../../../api/link";
 import styles from "/src/styles/AddItem.module.css";
 import confetti from "canvas-confetti";
 import { IAddItem } from "../../../interfaces/IAddItem";
+import arrow from '/src/assets/arrow-back.svg';
+import { NavBar } from "../../NavBar/NavBar";
 
 export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
   const [formData, setFormData] = React.useState({
@@ -19,29 +21,30 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
   const navigate = useNavigate();
   const [cookie] = useCookies(["jwt"]);
   const [selectDataValue, setSelectDataValue] = React.useState<any>();
-  const [selectedValue, setSelectedValue] = React.useState<number | string>('')
+  const [selectedValue, setSelectedValue] = React.useState<number | string>("");
 
-
-  React.useEffect(()=>{
-    const changeSelectValue = async() =>{
+  React.useEffect(() => {
+    const changeSelectValue = async () => {
       try {
-        await axios.get(`${link}/api/item-types/${selectedValue}`).then(({data}) => {
-          setSelectDataValue(data.data) 
-          console.log(data.data);
-          
-        })
+        await axios
+          .get(`${link}/api/item-types/${selectedValue}`)
+          .then(({ data }) => {
+            setSelectDataValue(data.data);
+            console.log(data.data);
+          });
       } catch (error) {
         console.log(error);
-        
       }
-    }
-    changeSelectValue()
-  },[selectedValue]);
-
+    };
+    changeSelectValue();
+  }, [selectedValue]);
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if ((userData && userData.items && userData.items.length >= 5 || selectedValue == '')) {
+    if (
+      (userData && userData.items && userData.items.length >= 5) ||
+      selectedValue == ""
+    ) {
       setIsSubmited(false);
       setTimeout(() => {
         setIsSubmited(null);
@@ -55,7 +58,7 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
           data: {
             ...formData,
             user: userData,
-            item_type: selectDataValue
+            item_type: selectDataValue,
           },
         },
         {
@@ -69,7 +72,7 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
         description: "",
         user: "",
       });
-      setSelectedValue('')
+      setSelectedValue("");
       setIsSubmited(true);
       confetti({
         particleCount: 150,
@@ -95,16 +98,13 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
         navigate("/signIn");
       }, 2000);
     }
-
-    
   }, [cookie, submitHandler]);
-  
+
   const onChangeInputValue = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    
     const { name, value } = e.target;
     setFormData(() => ({
       ...formData,
@@ -113,59 +113,68 @@ export const AddItem: FC<IAddItem> = ({ setUpdatePage, userData }) => {
     }));
   };
 
-  
   return (
-    <div className={styles.form__Container}>
-      {isAuth ? (
-        <form className={styles.form} onSubmit={submitHandler}>
-          <label htmlFor="title">Заголовок</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={onChangeInputValue}
-            className={styles.input}
-          />
-          <label htmlFor="subtitle">Описание</label>
-          <input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={onChangeInputValue}
-            className={styles.input}
-          />
-          
-          <label htmlFor="type">тип объявления</label>
-          <select
-            name="type"
-            onChange={(e: any) => setSelectedValue(e.target.value)}
-            value={selectedValue}
-            className={styles.input}
-          >
-            <option value=""></option>
-            <option value="1">Резюме</option>
-            <option value="2">Вакансия</option>
-            <option value="3">Продажа</option>
-            <option value="4">Покупка</option>
-          </select>
+    <>
+      <NavBar />
+      <Link to={"/"}>
+        <img src={arrow} className={styles.arrow} />
+      </Link>
 
-          <p style={{ color: "#fff" }}>Максимальное кол-во объявлений - 5!</p>
-          <button type="submit" disabled={(userData && userData.items && userData.items.length >= 5)}>
-            Разместить
-          </button>{" "}
-          {isSubmited ? (
-            <p style={{ color: "#00B64F" }}>
-              Ваше объявление успешно отправлено на модерацию!
-            </p>
-          ) : isSubmited === null ? (
-            <></>
-          ) : (
-            <p style={{ color: "#FF0000" }}>Упс.. Что то пошло не так</p>
-          )}
-        </form>
-      ) : (
-        <p className={styles.status}>Для начала пройдите авторизацию!</p>
-      )}
-    </div>
+      <div className={styles.form__Container}>
+        {isAuth ? (
+          <form className={styles.form} onSubmit={submitHandler}>
+            <label htmlFor="title">Заголовок</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={onChangeInputValue}
+              className={styles.input}
+            />
+            <label htmlFor="subtitle">Описание</label>
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={onChangeInputValue}
+              className={styles.input}
+            />
+            <label htmlFor="type">тип объявления</label>
+            <select
+              name="type"
+              onChange={(e: any) => setSelectedValue(e.target.value)}
+              value={selectedValue}
+              className={styles.input}
+            >
+              <option value=""></option>
+              <option value="1">Резюме</option>
+              <option value="2">Вакансия</option>
+              <option value="3">Продажа</option>
+              <option value="4">Покупка</option>
+            </select>
+            <p style={{ color: "#fff" }}>Максимальное кол-во объявлений - 5!</p>
+            <button
+              type="submit"
+              disabled={
+                userData && userData.items && userData.items.length >= 5
+              }
+            >
+              Разместить
+            </button>{" "}
+            {isSubmited ? (
+              <p style={{ color: "#00B64F" }}>
+                Ваше объявление успешно отправлено на модерацию!
+              </p>
+            ) : isSubmited === null ? (
+              <></>
+            ) : (
+              <p style={{ color: "#FF0000" }}>Упс.. Что то пошло не так</p>
+            )}
+          </form>
+        ) : (
+          <p className={styles.status}>Для начала пройдите авторизацию!</p>
+        )}
+      </div>
+    </>
   );
 };

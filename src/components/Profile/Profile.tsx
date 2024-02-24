@@ -14,9 +14,9 @@ export const Profile: FC<IProfile> = ({
   userData,
   setUpdatePage,
 }) => {
-  const [isUserUpdated, setUserUpdated] = React.useState(false);
+  const [, setUserUpdated] = React.useState(false);
   const [isFetching, setIsFetching] = React.useState<boolean>(true);
-  const [isAuth, ] = React.useState<boolean>(false);
+  const [isAuth] = React.useState<boolean>(false);
 
   const navigate = useNavigate();
   const [showLeftBar, setShowLeftBar] = React.useState<boolean>(false);
@@ -28,9 +28,14 @@ export const Profile: FC<IProfile> = ({
 
   React.useEffect(() => {
     if (!!token) {
-      setIsFetching(false);
+      setTimeout(() => {
+        setIsFetching(false);
+      }, 500);
     } else {
-      navigate("/signIn");
+      setTimeout(() => {
+        navigate("/signIn");
+      }, 1000);
+      
     }
 
     if (window.innerWidth > 768) {
@@ -46,11 +51,15 @@ export const Profile: FC<IProfile> = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [token, isUserUpdated]);
+  }, [token]);
 
   return (
     <div>
-      {isAuth ? (
+      {isFetching ? (
+        <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Loading />
+    </div>
+      ) : isAuth ? (
         <p className={styles.status}>Вы не авторизованы! </p>
       ) : (
         <>
@@ -82,7 +91,7 @@ export const Profile: FC<IProfile> = ({
                 options={{
                   userData: userData,
                   token: token,
-                  setUpdatePage: setUpdatePage
+                  setUpdatePage: setUpdatePage,
                 }}
               />{" "}
             </div>

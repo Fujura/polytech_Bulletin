@@ -2,12 +2,14 @@ import React, { FC, useEffect } from "react";
 
 import { link } from "../../api/link";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "/src/styles/AdminPanel.module.css";
 import { Loading } from "../Loading/Loading";
 import { Item } from "../items/Item/Item";
 import { IAdminPanel } from "../../interfaces/IAdminPanel";
 import { AnimatePresence } from "framer-motion";
+import arrow from '/src/assets/arrow-back.svg';
+import { NavBar } from "../NavBar/NavBar";
 
 export const AdminPanel: FC<IAdminPanel> = ({
   token,
@@ -65,6 +67,11 @@ export const AdminPanel: FC<IAdminPanel> = ({
   
   return (
     <div>
+      <NavBar />
+      <Link to={"/"}>
+        <img src={arrow} className={styles.arrow} />
+      </Link>
+
       <h2 className={styles.title}>Админ панель</h2>
       {isDataFetching ? (
         <Loading />
