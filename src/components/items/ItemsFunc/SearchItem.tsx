@@ -13,7 +13,6 @@ export const SearchItem: FC<ISearchItem> = ({
   // typeID,
   func: {typeFilterData, setTypeFilterData},
   select :{selectValue, setSelectValue},
-
   currentPage,
   // setDataFetching,
   searchTermOptions: { searchTerm, setSearchTerm },

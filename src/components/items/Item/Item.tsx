@@ -3,7 +3,7 @@ import styles from "/src/styles/Item.module.css";
 import defaultAvatar from "/public/profileDefault.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import {  motion } from "framer-motion";
+// import {  motion } from "framer-motion";
 import dotsIcon from "/src/assets/menu-dots-vertical.svg";
 import { IItem } from "../../../interfaces/Items/IItem";
 import { link } from "../../../api/link";
@@ -96,18 +96,19 @@ export const Item: FC<IItem> = React.memo(
 
     return (
       <>
-        <motion.div
+        {/* <motion.div
           className={styles.item}
-          initial={{ scale: 0.5, opacity: 0 }}
+          initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1}}
-          exit={{ scale: 0 }}
+          exit={{ scale: 0, opacity: 0 }}
           transition={{
             type: "spring",
             stiffness: 300,
             damping: 40,
           }}
           
-        >
+        > */}
+        <div className={styles.item}>
           {isLoading ? (
             <LoadingItem />
           ) : (
@@ -197,7 +198,8 @@ export const Item: FC<IItem> = React.memo(
             itemId={itemId}
             userData={userData}
           />
-        </motion.div>
+        {/* </motion.div> */}
+        </div>
       </>
     );
   }

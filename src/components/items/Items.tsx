@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useMemo } from "react";
 import { link } from "../../api/link";
 import { IItems } from "../../interfaces/Items/IItems";
 import { Item } from "./Item/Item.tsx";
@@ -13,68 +13,81 @@ import { AnimatePresence } from "framer-motion";
 
 export const Items: FC<IItems> = React.memo(
   ({ token, userData, setUpdatePage }) => {
-    const [isDataFetching, setDataFetching] = React.useState<boolean>(true);
-    const [searchTerm, setSearchTerm] = React.useState<string>("");
-    const [itemsData, setItemsData] = useState<any[any]>([]);
-    const [paginationInfo, setPagInfo] = useState<any[any]>({
+    const [isDataFetching, setDataFetching] = useState<boolean>(true);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [itemsData, setItemsData] = useState<any[]>([]);
+    const [paginationInfo, setPagInfo] = useState<any>({
       pageCount: 1,
       page: 1,
     });
+    const [selectValue, setSelectValue] = useState<string>("");
+    const { id: ID, typeId: typeID } = useParams();
     const [typeFilterData, setTypeFilterData] = React.useState<unknown>();
-    const [selectValue, setSelectValue] = React.useState<string>("");
 
-    let { id: ID, typeId: typeID } = useParams();
-
-    const fetchItemsData = React.useCallback(async () => {
+    const fetchItemsData = async () => {
       setDataFetching(true);
-      let response;
-      let filtredConfirmItems;
+      try {
+        let response;
+        let filtredConfirmItems;
 
-      if (!!typeID) {
-        try {
+        if (!!typeID) {
           response = await axios.get(`${link}/api/items?populate=*`);
           filtredConfirmItems = response.data.data.filter(
             (item: any) =>
               item.attributes.isConfirm === true &&
               item.attributes.item_type.data.id == selectValue
           );
-          setPagInfo({
-            pageCount: 1,
-            page: 1,
-          });
-          setItemsData(filtredConfirmItems);
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        try {
+          setPagInfo({ pageCount: 1, page: 1 });
+        } else {
           response = await axios.get(
             `${link}/api/items?populate=*&pagination[page]=${ID}&pagination[pageSize]=9`
           );
-          if (!typeID) {
-            filtredConfirmItems = response.data.data.filter(
-              (item: any) => item.attributes.isConfirm === true
-            );
-          }
+          filtredConfirmItems = response.data.data.filter(
+            (item: any) => item.attributes.isConfirm === true
+          );
           setPagInfo(response.data.meta.pagination);
-
-          setItemsData(filtredConfirmItems);
-        } catch (error) {
-          console.log(error);
         }
-      }
 
+        setItemsData(filtredConfirmItems);
+      } catch (error) {
+        console.log(error);
+      } finally {
         setDataFetching(false);
-        console.log(itemsData);
-        
-    }, [selectValue, typeFilterData, ID, typeID]);
+      }
+    };
 
     useEffect(() => {
-      fetchItemsData();      
-    }, [token, ID, typeID, typeFilterData, selectValue]);
+      fetchItemsData();
+    }, [ID, typeID, selectValue]);
+
+    const renderItems = useMemo(() => {
+      return (
+        <AnimatePresence>
+          {itemsData.map((item: any) => (
+            <Item
+              key={item.id}
+              options={{
+                itemId: item.id,
+                username:
+                  item.attributes.user?.data?.attributes?.username || "",
+                title: item.attributes.title,
+                type: item.attributes.item_type.data.attributes.type,
+                description: item.attributes.description,
+                userAvatar:
+                  item.attributes.user?.data?.attributes?.avatarUrl || "",
+                token: token,
+                userId: item.attributes.user?.data?.id || "",
+                setUpdatePage: setUpdatePage,
+              }}
+              userData={userData}
+            />
+          ))}
+        </AnimatePresence>
+      );
+    }, [itemsData, token, setUpdatePage, userData]);
+
     return (
       <>
-        {/* <NavBar /> */}
         <div>
           <Link to={"/"}>
             <img src={arrow} className={style.arrow} />
@@ -82,64 +95,61 @@ export const Items: FC<IItems> = React.memo(
 
           <SearchItem
             itemsData={itemsData}
-            // setFiltredItems={setFilteredItems}
             select={{ selectValue, setSelectValue }}
-            func={{ typeFilterData, setTypeFilterData }}
             typeID={typeID}
+            func={{ typeFilterData, setTypeFilterData }}
             setDataFetching={setDataFetching}
             currentPage={paginationInfo?.page}
             searchTermOptions={{ searchTerm, setSearchTerm }}
           />
-          <div style={{position: 'relative', display: 'flex', flexDirection:'column'}} >
-            {/* {isDataFetching ? ( */}
-        
-            <div style={isDataFetching ? {zIndex: '2'} : {zIndex: '-15'}}>
-            <div style={{position:'absolute', zIndex: '999', margin:'0 47.5%', top: '25vh'}}>
-             <Loading /> 
-            </div>
-            
-            <div style={{ position: 'absolute', width: '90vw', margin: '0 4.5%', height:'100%', backgroundColor: 'transparent', opacity: '95%', backdropFilter: 'blur(5px)', zIndex:'2', borderRadius: '24px' }}>
-          </div>
-          </div>
-
-          
-            {itemsData.length ? (
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {isDataFetching && (
               <>
-                <div className={style.items__Container} style={{zIndex: '1'}}> 
-                  <AnimatePresence>
-                    {itemsData.map((item: any) => (
-                      <Item
-                        key={item.id}
-                        options={{
-                          itemId: item.id,
-                          username:
-                            item.attributes.user?.data?.attributes?.username ||
-                            "",
-                          title: item.attributes.title,
-                          type: item.attributes.item_type.data.attributes.type,
-                          description: item.attributes.description,
-                          userAvatar:
-                            item.attributes.user?.data?.attributes?.avatarUrl ||
-                            "",
-                          token: token,
-                          userId: item.attributes.user?.data?.id || "",
-                          setUpdatePage: setUpdatePage,
-                        }}
-                        userData={userData}
-                      />
-                    ))}
-                  </AnimatePresence>
+                <div
+                  style={{
+                    position: "relative",
+                    zIndex: "3",
+                    margin: "0 auto",
+                    marginBottom: '-90px'
+                  }}
+                >
+                  <Loading />
                 </div>
-
+                <div
+                  style={{
+                    position: "absolute",
+                    width: "90vw",
+                    margin: "0 4.5%",
+                    height: "100%",
+                    backgroundColor: "transparent",
+                    opacity: "95%",
+                    backdropFilter: "blur(5px)",
+                    zIndex: "2",
+                    borderRadius: "24px",
+                  }}
+                ></div>
+              </>
+            )}
+            { itemsData.length > 0 ? (
+              <>
+                <div className={style.items__Container} style={{ zIndex: "1" }}>
+                  {renderItems}
+                </div>
                 <Pagination
                   currentPage={Number(ID)}
                   pageCount={paginationInfo.pageCount}
                 />
               </>
-
-            ): (
-              isDataFetching ? <></> :  
-              <p className={style.status}>Объявлений не найдено!</p>
+            ) : (
+              !isDataFetching && (
+                <p className={style.status}>Объявлений не найдено!</p>
+              )
             )}
           </div>
         </div>
