@@ -58,7 +58,9 @@ export const SearchItem: FC<ISearchItem> = ({
     if(!!selectValue) navigate(`/items/page/${currentPage}/filtred-type/${selectValue}`);
 
     if(selectValue === undefined){
-      return
+      // return
+      navigate(`/items/page/${currentPage}`);
+      
     } else if(selectValue === '') {
       navigate(`/items/page/${currentPage}`);
     }

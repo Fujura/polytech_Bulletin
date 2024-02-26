@@ -30,7 +30,7 @@ export const Items: FC<IItems> = React.memo(
         let response;
         let filtredConfirmItems;
 
-        if (!!typeID) {
+        if (!!typeID && !!selectValue) {
           response = await axios.get(`${link}/api/items?populate=*`);
           filtredConfirmItems = response.data.data.filter(
             (item: any) =>
@@ -62,7 +62,7 @@ export const Items: FC<IItems> = React.memo(
 
     const renderItems = useMemo(() => {
       return (
-        <AnimatePresence>
+        <>
           {itemsData.map((item: any) => (
             <Item
               key={item.id}
@@ -82,7 +82,7 @@ export const Items: FC<IItems> = React.memo(
               userData={userData}
             />
           ))}
-        </AnimatePresence>
+        </>
       );
     }, [itemsData, token, setUpdatePage, userData]);
 
@@ -116,7 +116,7 @@ export const Items: FC<IItems> = React.memo(
                     position: "relative",
                     zIndex: "3",
                     margin: "0 auto",
-                    marginBottom: '-90px'
+                    marginBottom: "-90px",
                   }}
                 >
                   <Loading />
@@ -136,7 +136,7 @@ export const Items: FC<IItems> = React.memo(
                 ></div>
               </>
             )}
-            { itemsData.length > 0 ? (
+            {itemsData.length > 0 ? (
               <>
                 <div className={style.items__Container} style={{ zIndex: "1" }}>
                   {renderItems}
