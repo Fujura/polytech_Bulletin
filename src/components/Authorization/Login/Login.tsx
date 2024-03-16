@@ -27,6 +27,7 @@ export const Login: FC = () => {
     color: ''
   });
   const navigate = useNavigate();
+  let date = new Date();
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,7 +41,8 @@ export const Login: FC = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(`${link}/api/auth/local`, userData);
-      setCookie("jwt", data.jwt);
+      date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+      setCookie("jwt", data.jwt, { expires: date });
       setStatus({
         text: "Вы успешно прошли авторизацию!",
         color: "#248F40"
