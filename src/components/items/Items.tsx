@@ -9,7 +9,7 @@ import arrow from "/src/assets/arrow-back.svg";
 import { SearchItem } from "./ItemsFunc/SearchItem";
 import { Loading } from "../Loading/Loading";
 import { Pagination } from "./Pagination/Pagination.tsx";
-import { AnimatePresence } from "framer-motion";
+// import { AnimatePresence } from "framer-motion";
 
 export const Items: FC<IItems> = React.memo(
   ({ token, userData, setUpdatePage }) => {

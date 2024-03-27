@@ -14,7 +14,7 @@ export const SearchItem: FC<ISearchItem> = ({
   func: {typeFilterData, setTypeFilterData},
   select :{selectValue, setSelectValue},
   currentPage,
-  // setDataFetching,
+  setDataFetching,
   searchTermOptions: { searchTerm, setSearchTerm },
 }) => {
   const navigate = useNavigate();
@@ -49,9 +49,13 @@ export const SearchItem: FC<ISearchItem> = ({
         const response = await axios.get(
           `${link}/api/item-types/${selectValue}?populate=*`
         );
+        setDataFetching(false)
+
         setTypeFilterData(response.data);
       } catch (error) {
         console.log(error);
+      }finally{
+        setDataFetching(false)
       }
     })();
     

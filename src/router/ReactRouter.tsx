@@ -20,23 +20,23 @@ const ReactRouter = () => {
   const [userData, setUserData] = React.useState({
     username: "",
     id: 0,
-    avatarUrl: "",
-    role: {
-      name: "",
-    },
-    items: [],
-  });
-  const [isLoading, setLoading] = React.useState<boolean>(true);
-  const [updatePage, setUpdatePage] = React.useState<boolean>(false);
-  const params = {
-    method: 'get',
-    url: `${link}/api/users/me?populate=*`,
-    headers: { Authorization: `Bearer ${cookie.jwt}`},
-    states: {setData: setUserData, setLoading}
-  };
-  React.useEffect(() => {
-    fetchDataService(params);
-  }, [cookie.jwt, updatePage]);
+      avatarUrl: "",
+      role: {
+        name: "",
+      },
+      items: [],
+    });
+    const [isLoading, setLoading] = React.useState<boolean>(true);
+    const [updatePage, setUpdatePage] = React.useState<boolean>(false);
+    const params = {
+      method: 'get',
+      url: `${link}/api/users/me?populate=*`,
+      headers: { Authorization: `Bearer ${cookie.jwt}`},
+      states: {setData: setUserData, setLoading}
+    };
+    React.useEffect(() => {
+      fetchDataService(params);
+    }, [cookie.jwt, updatePage]);
 
   return (
     <Router>
